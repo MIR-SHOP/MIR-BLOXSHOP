@@ -113,6 +113,654 @@ document.getElementById("message").textContent=
   <p>@justrynianbrian1</p>
 </section>
   
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIR BLOX SHOP</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#100b1c;color:white;font-family:Arial,sans-serif}
+header{text-align:center;padding:28px 12px;background:linear-gradient(135deg,#29164c,#100b1c)}
+header h1{color:#c49aff;font-size:34px;margin:5px}
+header p{color:#ddd}
+main{max-width:900px;margin:auto;padding:15px}
+h2{color:#c49aff}
+input,textarea{width:100%;padding:13px;margin:7px 0;border:1px solid #65449a;border-radius:10px;background:#211832;color:white}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
+.fruit{background:#211832;padding:14px;border:1px solid #49336b;border-radius:14px;text-align:center}
+.fruit h3{margin:8px 0}
+.price{color:#d4b4ff;font-weight:bold}
+button{border:0;border-radius:9px;padding:10px 14px;background:#8955d5;color:white;font-weight:bold;cursor:pointer;margin:4px}
+button:disabled{background:#555;cursor:not-allowed}
+.stock{color:#a8efb2;font-size:13px}
+.out{color:#ff7777;font-weight:bold}
+section{background:#191226;padding:17px;border-radius:14px;margin:18px 0}
+.stars{color:#ffd45c;font-size:25px}
+footer{text-align:center;padding:25px;color:#aaa}
+</style>
+</head>
+<body>
+<header>
+<h1>💜 MIR BLOX SHOP</h1>
+<p>متجرك الأول لفواكه Blox Fruits</p>
+</header>
+
+<main>
+<section>
+<h2>🍇 الفواكه</h2>
+<input id="search" placeholder="ابحث عن فاكهة..." oninput="render()">
+<div class="grid" id="fruits"></div>
+</section>
+
+<section>
+<h2>🛒 سلة المشتريات</h2>
+<div id="cart">السلة فارغة</div>
+<p id="total">المجموع: R$ 0</p>
+<input id="roblox" placeholder="اسمك في Roblox">
+<button onclick="order()">إرسال الطلب</button>
+</section>
+
+<section>
+<h2>⭐ آراء الزبائن</h2>
+<p>اختار تقييمك واكتب رأيك. التعليقات تظهر بعد المراجعة.</p>
+<div class="stars" id="stars">★★★★★</div>
+<input id="reviewName" placeholder="اسمك">
+<textarea id="reviewText" placeholder="اكتب رأيك باحترام..."></textarea>
+<button onclick="sendReview()">إرسال التقييم</button>
+<p id="reviewMessage"></p>
+<div id="reviews"></div>
+</section>
+
+<section style="text-align:center">
+<h2>🛠️ تحتاج مساعدة؟</h2>
+<p>تواصل معانا على تيك توك</p>
+<a href="https://www.tiktok.com/@justrynianbrian1" style="color:#c49aff"> @justrynianbrian1 </a>
+</section>
+</main>
+
+<footer>MIR BLOX SHOP © 2026</footer>
+
+<script>
+const fruits=[
+["روكيت","Rocket",50,10],
+["سبين","Spin",75,10],
+["تشوب","Chop",100,10],
+["سبرينغ","Spring",120,10],
+["بومب","Bomb",150,10],
+["سموك","Smoke",200,10],
+["سبايك","Spike",250,10],
+["فليم","Flame",500,5],
+["آيس","Ice",600,5],
+["ساند","Sand",700,5],
+["دارك","Dark",800,5],
+["لايت","Light",1000,5],
+["ماجما","Magma",1200,5],
+["غوست","Ghost",1500,5],
+["مطاط","Rubber",1800,5],
+["بارير","Barrier",2000,5],
+["فينيكس","Phoenix",2500,3],
+["بوذا","Buddha",3000,3],
+["لوف","Love",3500,3],
+["سبايدر","Spider",4000,3],
+["ساوند","Sound",4500,3],
+["بورتال","Portal",5000,3],
+["رَمبل","Rumble",5500,3],
+["بَين","Pain",6000,2],
+["بليزارد","Blizzard",6500,2],
+["غرافيتي","Gravity",7000,2],
+["ماموث","Mammoth",7500,2],
+["تيريكس","T-Rex",8000,2],
+["غاز","Gas",8500,2],
+["دينو","Dough",9000,2],
+["ليوبارد","Leopard",9500,2],
+["كيتسوني","Kitsune",10000,1],
+["دراجون","Dragon",12000,1]
+].map((f,i)=>({id:i,name:f[0],en:f[1],price:f[2],stock:f[3]}));
+
+let cart={};
+let rating=5;
+
+function render(){
+ let q=document.getElementById("search").value.toLowerCase();
+ document.getElementById("fruits").innerHTML=fruits.filter(f=>(f.name+f.en).toLowerCase().includes(q)).map(f=>`
+ <div class="fruit">
+ <h3>${f.name}</h3>
+ <small>${f.en}</small>
+ <p class="price">R$ ${f.price}</p>
+ <p class="${f.stock===0?'out':'stock'}">${f.stock===0?'نفدت الكمية':'متوفر: '+f.stock}</p>
+ <button ${f.stock===0?'disabled':''} onclick="add(${f.id})">أضف للسلة</button>
+ </div>`).join("");
+}
+function add(id){
+ let f=fruits[id];
+ if(!f||f.stock<=0)return;
+ if((cart[id]||0)>=f.stock)return;
+ cart[id]=(cart[id]||0)+1;
+ showCart();
+}
+function change(id,n){
+ let f=fruits[id];
+ cart[id]=(cart[id]||0)+n;
+ if(cart[id]<=0)delete cart[id];
+ if(cart[id]>f.stock)cart[id]=f.stock;
+ showCart();
+}
+function showCart(){
+ let items=Object.entries(cart);
+ document.getElementById("cart").innerHTML=items.length?items.map(([id,n])=>`
+ <p>${fruits[id].name} — ${n}
+ <button onclick="change(${id},1)">+</button>
+ <button onclick="change(${id},-1)">-</button></p>`).join(""):"السلة فارغة";
+ let total=items.reduce((s,[id,n])=>s+fruits[id].price*n,0);
+ document.getElementById("total").textContent="المجموع: R$ "+total;
+}
+function order(){
+ if(!Object.keys(cart).length)return alert("السلة فارغة");
+ let name=document.getElementById("roblox").value.trim();
+ if(!name)return alert("اكتب اسم Roblox");
+ alert("تم تجهيز طلبك يا "+name+"! تواصل معنا على تيك توك لإكمال الطلب.");
+}
+document.getElementById("stars").onclick=()=>{};
+function sendReview(){
+ let name=document.getElementById("reviewName").value.trim();
+ let review=document.getElementById("reviewText").value.trim();
+ if(!name||!review)return alert("اكتب اسمك ورأيك");
+ document.getElementById("reviewMessage").textContent="شكراً لك! تقييمك ينتظر المراجعة قبل النشر.";
+ document.getElementById("reviewText").value="";
+}
+render();
+</script>
+</body>
+</html>
+  
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIR BLOX SHOP</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#100b1c;color:white;font-family:Arial,sans-serif}
+header{text-align:center;padding:28px 12px;background:linear-gradient(135deg,#29164c,#100b1c)}
+header h1{color:#c49aff;font-size:34px;margin:5px}
+header p{color:#ddd}
+main{max-width:900px;margin:auto;padding:15px}
+h2{color:#c49aff}
+input,textarea{width:100%;padding:13px;margin:7px 0;border:1px solid #65449a;border-radius:10px;background:#211832;color:white}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
+.fruit{background:#211832;padding:14px;border:1px solid #49336b;border-radius:14px;text-align:center}
+.fruit h3{margin:8px 0}
+.price{color:#d4b4ff;font-weight:bold}
+button{border:0;border-radius:9px;padding:10px 14px;background:#8955d5;color:white;font-weight:bold;cursor:pointer;margin:4px}
+button:disabled{background:#555;cursor:not-allowed}
+.stock{color:#a8efb2;font-size:13px}
+.out{color:#ff7777;font-weight:bold}
+section{background:#191226;padding:17px;border-radius:14px;margin:18px 0}
+.stars{color:#ffd45c;font-size:25px}
+footer{text-align:center;padding:25px;color:#aaa}
+</style>
+</head>
+<body>
+<header>
+<h1>💜 MIR BLOX SHOP</h1>
+<p>متجرك الأول لفواكه Blox Fruits</p>
+</header>
+
+<main>
+<section>
+<h2>🍇 الفواكه</h2>
+<input id="search" placeholder="ابحث عن فاكهة..." oninput="render()">
+<div class="grid" id="fruits"></div>
+</section>
+
+<section>
+<h2>🛒 سلة المشتريات</h2>
+<div id="cart">السلة فارغة</div>
+<p id="total">المجموع: R$ 0</p>
+<input id="roblox" placeholder="اسمك في Roblox">
+<button onclick="order()">إرسال الطلب</button>
+</section>
+
+<section>
+<h2>⭐ آراء الزبائن</h2>
+<p>اختار تقييمك واكتب رأيك. التعليقات تظهر بعد المراجعة.</p>
+<div class="stars" id="stars">★★★★★</div>
+<input id="reviewName" placeholder="اسمك">
+<textarea id="reviewText" placeholder="اكتب رأيك باحترام..."></textarea>
+<button onclick="sendReview()">إرسال التقييم</button>
+<p id="reviewMessage"></p>
+<div id="reviews"></div>
+</section>
+
+<section style="text-align:center">
+<h2>🛠️ تحتاج مساعدة؟</h2>
+<p>تواصل معانا على تيك توك</p>
+<a href="https://www.tiktok.com/@justrynianbrian1" style="color:#c49aff"> @justrynianbrian1 </a>
+</section>
+</main>
+
+<footer>MIR BLOX SHOP © 2026</footer>
+
+<script>
+const fruits=[
+["روكيت","Rocket",50,10],
+["سبين","Spin",75,10],
+["تشوب","Chop",100,10],
+["سبرينغ","Spring",120,10],
+["بومب","Bomb",150,10],
+["سموك","Smoke",200,10],
+["سبايك","Spike",250,10],
+["فليم","Flame",500,5],
+["آيس","Ice",600,5],
+["ساند","Sand",700,5],
+["دارك","Dark",800,5],
+["لايت","Light",1000,5],
+["ماجما","Magma",1200,5],
+["غوست","Ghost",1500,5],
+["مطاط","Rubber",1800,5],
+["بارير","Barrier",2000,5],
+["فينيكس","Phoenix",2500,3],
+["بوذا","Buddha",3000,3],
+["لوف","Love",3500,3],
+["سبايدر","Spider",4000,3],
+["ساوند","Sound",4500,3],
+["بورتال","Portal",5000,3],
+["رَمبل","Rumble",5500,3],
+["بَين","Pain",6000,2],
+["بليزارد","Blizzard",6500,2],
+["غرافيتي","Gravity",7000,2],
+["ماموث","Mammoth",7500,2],
+["تيريكس","T-Rex",8000,2],
+["غاز","Gas",8500,2],
+["دينو","Dough",9000,2],
+["ليوبارد","Leopard",9500,2],
+["كيتسوني","Kitsune",10000,1],
+["دراجون","Dragon",12000,1]
+].map((f,i)=>({id:i,name:f[0],en:f[1],price:f[2],stock:f[3]}));
+
+let cart={};
+let rating=5;
+
+function render(){
+ let q=document.getElementById("search").value.toLowerCase();
+ document.getElementById("fruits").innerHTML=fruits.filter(f=>(f.name+f.en).toLowerCase().includes(q)).map(f=>`
+ <div class="fruit">
+ <h3>${f.name}</h3>
+ <small>${f.en}</small>
+ <p class="price">R$ ${f.price}</p>
+ <p class="${f.stock===0?'out':'stock'}">${f.stock===0?'نفدت الكمية':'متوفر: '+f.stock}</p>
+ <button ${f.stock===0?'disabled':''} onclick="add(${f.id})">أضف للسلة</button>
+ </div>`).join("");
+}
+function add(id){
+ let f=fruits[id];
+ if(!f||f.stock<=0)return;
+ if((cart[id]||0)>=f.stock)return;
+ cart[id]=(cart[id]||0)+1;
+ showCart();
+}
+function change(id,n){
+ let f=fruits[id];
+ cart[id]=(cart[id]||0)+n;
+ if(cart[id]<=0)delete cart[id];
+ if(cart[id]>f.stock)cart[id]=f.stock;
+ showCart();
+}
+function showCart(){
+ let items=Object.entries(cart);
+ document.getElementById("cart").innerHTML=items.length?items.map(([id,n])=>`
+ <p>${fruits[id].name} — ${n}
+ <button onclick="change(${id},1)">+</button>
+ <button onclick="change(${id},-1)">-</button></p>`).join(""):"السلة فارغة";
+ let total=items.reduce((s,[id,n])=>s+fruits[id].price*n,0);
+ document.getElementById("total").textContent="المجموع: R$ "+total;
+}
+function order(){
+ if(!Object.keys(cart).length)return alert("السلة فارغة");
+ let name=document.getElementById("roblox").value.trim();
+ if(!name)return alert("اكتب اسم Roblox");
+ alert("تم تجهيز طلبك يا "+name+"! تواصل معنا على تيك توك لإكمال الطلب.");
+}
+document.getElementById("stars").onclick=()=>{};
+function sendReview(){
+ let name=document.getElementById("reviewName").value.trim();
+ let review=document.getElementById("reviewText").value.trim();
+ if(!name||!review)return alert("اكتب اسمك ورأيك");
+ document.getElementById("reviewMessage").textContent="شكراً لك! تقييمك ينتظر المراجعة قبل النشر.";
+ document.getElementById("reviewText").value="";
+}
+render()
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIR BLOX SHOP</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#100b1c;color:white;font-family:Arial,sans-serif}
+header{text-align:center;padding:28px 12px;background:linear-gradient(135deg,#29164c,#100b1c)}
+header h1{color:#c49aff;font-size:34px;margin:5px}
+header p{color:#ddd}
+main{max-width:900px;margin:auto;padding:15px}
+h2{color:#c49aff}
+input,textarea{width:100%;padding:13px;margin:7px 0;border:1px solid #65449a;border-radius:10px;background:#211832;color:white}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
+.fruit{background:#211832;padding:14px;border:1px solid #49336b;border-radius:14px;text-align:center}
+.fruit h3{margin:8px 0}
+.price{color:#d4b4ff;font-weight:bold}
+button{border:0;border-radius:9px;padding:10px 14px;background:#8955d5;color:white;font-weight:bold;cursor:pointer;margin:4px}
+button:disabled{background:#555;cursor:not-allowed}
+.stock{color:#a8efb2;font-size:13px}
+.out{color:#ff7777;font-weight:bold}
+section{background:#191226;padding:17px;border-radius:14px;margin:18px 0}
+.stars{color:#ffd45c;font-size:25px}
+footer{text-align:center;padding:25px;color:#aaa}
+</style>
+</head>
+<body>
+<header>
+<h1>💜 MIR BLOX SHOP</h1>
+<p>متجرك الأول لفواكه Blox Fruits</p>
+</header>
+
+<main>
+<section>
+<h2>🍇 الفواكه</h2>
+<input id="search" placeholder="ابحث عن فاكهة..." oninput="render()">
+<div class="grid" id="fruits"></div>
+</section>
+
+<section>
+<h2>🛒 سلة المشتريات</h2>
+<div id="cart">السلة فارغة</div>
+<p id="total">المجموع: R$ 0</p>
+<input id="roblox" placeholder="اسمك في Roblox">
+<button onclick="order()">إرسال الطلب</button>
+</section>
+
+<section>
+<h2>⭐ آراء الزبائن</h2>
+<p>اختار تقييمك واكتب رأيك. التعليقات تظهر بعد المراجعة.</p>
+<div class="stars" id="stars">★★★★★</div>
+<input id="reviewName" placeholder="اسمك">
+<textarea id="reviewText" placeholder="اكتب رأيك باحترام..."></textarea>
+<button onclick="sendReview()">إرسال التقييم</button>
+<p id="reviewMessage"></p>
+<div id="reviews"></div>
+</section>
+
+<section style="text-align:center">
+<h2>🛠️ تحتاج مساعدة؟</h2>
+<p>تواصل معانا على تيك توك</p>
+<a href="https://www.tiktok.com/@justrynianbrian1" style="color:#c49aff"> @justrynianbrian1 </a>
+</section>
+</main>
+
+<footer>MIR BLOX SHOP © 2026</footer>
+
+<script>
+const fruits=[
+["روكيت","Rocket",50,10],
+["سبين","Spin",75,10],
+["تشوب","Chop",100,10],
+["سبرينغ","Spring",120,10],
+["بومب","Bomb",150,10],
+["سموك","Smoke",200,10],
+["سبايك","Spike",250,10],
+["فليم","Flame",500,5],
+["آيس","Ice",600,5],
+["ساند","Sand",700,5],
+["دارك","Dark",800,5],
+["لايت","Light",1000,5],
+["ماجما","Magma",1200,5],
+["غوست","Ghost",1500,5],
+["مطاط","Rubber",1800,5],
+["بارير","Barrier",2000,5],
+["فينيكس","Phoenix",2500,3],
+["بوذا","Buddha",3000,3],
+["لوف","Love",3500,3],
+["سبايدر","Spider",4000,3],
+["ساوند","Sound",4500,3],
+["بورتال","Portal",5000,3],
+["رَمبل","Rumble",5500,3],
+["بَين","Pain",6000,2],
+["بليزارد","Blizzard",6500,2],
+["غرافيتي","Gravity",7000,2],
+["ماموث","Mammoth",7500,2],
+["تيريكس","T-Rex",8000,2],
+["غاز","Gas",8500,2],
+["دينو","Dough",9000,2],
+["ليوبارد","Leopard",9500,2],
+["كيتسوني","Kitsune",10000,1],
+["دراجون","Dragon",12000,1]
+].map((f,i)=>({id:i,name:f[0],en:f[1],price:f[2],stock:f[3]}));
+
+let cart={};
+let rating=5;
+
+function render(){
+ let q=document.getElementById("search").value.toLowerCase();
+ document.getElementById("fruits").innerHTML=fruits.filter(f=>(f.name+f.en).toLowerCase().includes(q)).map(f=>`
+ <div class="fruit">
+ <h3>${f.name}</h3>
+ <small>${f.en}</small>
+ <p class="price">R$ ${f.price}</p>
+ <p class="${f.stock===0?'out':'stock'}">${f.stock===0?'نفدت الكمية':'متوفر: '+f.stock}</p>
+ <button ${f.stock===0?'disabled':''} onclick="add(${f.id})">أضف للسلة</button>
+ </div>`).join("");
+}
+function add(id){
+ let f=fruits[id];
+ if(!f||f.stock<=0)return;
+ if((cart[id]||0)>=f.stock)return;
+ cart[id]=(cart[id]||0)+1;
+ showCart();
+}
+function change(id,n){
+ let f=fruits[id];
+ cart[id]=(cart[id]||0)+n;
+ if(cart[id]<=0)delete cart[id];
+ if(cart[id]>f.stock)cart[id]=f.stock;
+ showCart();
+}
+function showCart(){
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIR BLOX SHOP</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#100b1c;color:white;font-family:Arial,sans-serif}
+header{text-align:center;padding:28px 12px;background:linear-gradient(135deg,#29164c,#100b1c)}
+header h1{color:#c49aff;font-size:34px;margin:5px}
+header p{color:#ddd}
+main{max-width:900px;margin:auto;padding:15px}
+h2{color:#c49aff}
+input,textarea{width:100%;padding:13px;margin:7px 0;border:1px solid #65449a;border-radius:10px;background:#211832;color:white}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
+.fruit{background:#211832;padding:14px;border:1px solid #49336b;border-radius:14px;text-align:center}
+.fruit h3{margin:8px 0}
+.price{color:#d4b4ff;font-weight:bold}
+button{border:0;border-radius:9px;padding:10px 14px;background:#8955d5;color:white;font-weight:bold;cursor:pointer;margin:4px}
+button:disabled{background:#555;cursor:not-allowed}
+.stock{color:#a8efb2;font-size:13px}
+.out{color:#ff7777;font-weight:bold}
+section{background:#191226;padding:17px;border-radius:14px;margin:18px 0}
+.stars{color:#ffd45c;font-size:25px}
+footer{text-align:center;padding:25px;color:#aaa}
+</style>
+</head>
+<body>
+<header>
+<h1>💜 MIR BLOX SHOP</h1>
+<p>متجرك الأول لفواكه Blox Fruits</p>
+</header>
+
+<main>
+<section>
+<h2>🍇 الفواكه</h2>
+<input id="search" placeholder="ابحث عن فاكهة..." oninput="render()">
+<div class="grid" id="fruits"></div>
+</section>
+
+<section>
+<h2>🛒 سلة المشتريات</h2>
+<div id="cart">السلة فارغة</div>
+<p id="total">المجموع: R$ 0</p>
+<input id="roblox" placeholder="اسمك في Roblox">
+<button onclick="order()">إرسال الطلب</button>
+</section>
+
+<section>
+<h2>⭐ آراء الزبائن</h2>
+<p>اختار تقييمك واكتب رأيك. التعليقات تظهر بعد المراجعة.</p>
+<div class="stars" id="stars">★★★★★</div>
+<input id="reviewName" placeholder="اسمك">
+<textarea id="reviewText" placeholder="اكتب رأيك باحترام..."></textarea>
+<button onclick="sendReview()">إرسال التقييم</button>
+<p id="reviewMessage"></p>
+<div id="reviews"></div>
+</section>
+
+<section style="text-align:center">
+<h2>🛠️ تحتاج مساعدة؟</h2>
+<p>تواصل معانا على تيك توك</p>
+<a href="https://www.tiktok.com/@justrynianbrian1" style="color:#c49aff"> @justrynianbrian1 </a>
+</section>
+</main>
+
+<footer>MIR BLOX SHOP © 2026</footer>
+
+<script>
+const fruits=[
+["روكيت","Rocket",50,10],
+["سبين","Spin",75,10],
+["تشوب","Chop",100,10],
+["سبرينغ","Spring",120,10],
+["بومب","Bomb",150,10],
+["سموك","Smoke",200,10],
+["سبايك","Spike",250,10],
+["فليم","Flame",500,5],
+["آيس","Ice",600,5],
+["ساند","Sand",700,5],
+["دارك","Dark",800,5],
+["لايت","Light",1000,5],
+["ماجما","Magma",1200,5],
+["غوست","Ghost",1500,5],
+["مطاط","Rubber",1800,5],
+["بارير","Barrier",2000,5],
+["فينيكس","Phoenix",2500,3],
+["بوذا","Buddha",3000,3],
+["لوف","Love",3500,3],
+["سبايدر","Spider",4000,3],
+["ساوند","Sound",4500,3],
+["بورتال","Portal",5000,3],
+["رَمبل","Rumble",5500,3],
+["بَين","Pain",6000,2],
+["بليزارد","Blizzard",6500,2],
+["غرافيتي","Gravity",7000,2],
+["ماموث","Mammoth",7500,2],
+["تيريكس","T-Rex",8000,2],
+["غاز","Gas",8500,2],
+["دينو","Dough",9000,2],
+["ليوبارد","Leopard",9500,2],
+["كيتسوني","Kitsune",10000,1],
+["دراجون","Dragon",12000,1]
+].map((f,i)=>({id:i,name:f[0],en:f[1],price:f[2],stock:f[3]}));
+
+let cart={};
+let rating=5;
+
+function render(){
+ let q=document.getElementById("search").value.toLowerCase();
+ document.getElementById("fruits").innerHTML=fruits.filter(f=>(f.name+f.en).toLowerCase().includes(q)).map(f=>`
+ <div class="fruit">
+ <h3>${f.name}</h3>
+ <small>${f.en}</small>
+ <p class="price">R$ ${f.price}</p>
+ <p class="${f.stock===0?'out':'stock'}">${f.stock===0?'نفدت الكمية':'متوفر: '+f.stock}</p>
+ <button ${f.stock===0?'disabled':''} onclick="add(${f.id})">أضف للسلة</button>
+ </div>`).join("");
+}
+function add(id){
+ let f=fruits[id];
+ if(!f||f.stock<=0)return;
+ if((cart[id]||0)>=f.stock)return;
+ cart[id]=(cart[id]||0)+1;
+ showCart();
+}
+function change(id,n){
+ let f=fruits[id];
+ cart[id]=(cart[id]||0)+n;
+ if(cart[id]<=0)delete cart[id];
+ if(cart[id]>f.stock)cart[id]=f.stock;
+ showCart();
+}
+function showCart(){
+ let items=Object.entries(cart);
+ document.getElementById("cart").innerHTML=items.length?items.map(([id,n])=>`
+ <p>${fruits[id].name} — ${n}
+ <button onclick="change(${id},1)">+</button>
+ <button onclick="change(${id},-1)">-</button></p>`).join(""):"السلة فارغة";
+ let total=items.reduce((s,[id,n])=>s+fruits[id].price*n,0);
+ document.getElementById("total").textContent="المجموع: R$ "+total;
+}
+function order(){
+ if(!Object.keys(cart).length)return alert("السلة فارغة");
+ let name=document.getElementById("roblox").value.trim();
+ if(!name)return alert("اكتب اسم Roblox");
+ alert("تم تجهيز طلبك يا "+name+"! تواصل معنا على تيك توك لإكمال الطلب.");
+}
+document.getElementById("stars").onclick=()=>{};
+function sendReview(){
+ let name=document.getElementById("reviewName").value.trim();
+ let review=document.getElementById("reviewText").value.trim();
+ if(!name||!review)return alert("اكتب اسمك ورأيك");
+ document.getElementById("reviewMessage").textContent="شكراً لك! تقييمك ينتظر المراجعة قبل النشر.";
+ document.getElementById("reviewText").value="";
+}
+render();
+</script>
+</body>
+</html>
+  
+ let items=Object.entries(cart);
+ document.getElementById("cart").innerHTML=items.length?items.map(([id,n])=>`
+ <p>${fruits[id].name} — ${n}
+ <button onclick="change(${id},1)">+</button>
+ <button onclick="change(${id},-1)">-</button></p>`).join(""):"السلة فارغة";
+ let total=items.reduce((s,[id,n])=>s+fruits[id].price*n,0);
+ document.getElementById("total").textContent="المجموع: R$ "+total;
+}
+function order(){
+ if(!Object.keys(cart).length)return alert("السلة فارغة");
+ let name=document.getElementById("roblox").value.trim();
+ if(!name)return alert("اكتب اسم Roblox");
+ alert("تم تجهيز طلبك يا "+name+"! تواصل معنا على تيك توك لإكمال الطلب.");
+}
+document.getElementById("stars").onclick=()=>{};
+function sendReview(){
+ let name=document.getElementById("reviewName").value.trim();
+ let review=document.getElementById("reviewText").value.trim();
+ if(!name||!review)return alert("اكتب اسمك ورأيك");
+ document.getElementById("reviewMessage").textContent="شكراً لك! تقييمك ينتظر المراجعة قبل النشر.";
+ document.getElementById("reviewText").value="";
+}
+render();
+</script>
+</body>
+</html>
+  ;
+</script>
+</body>
+</html>
+  
 </body>
 </html>
 
