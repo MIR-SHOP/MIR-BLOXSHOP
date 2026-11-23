@@ -276,6 +276,34 @@ updateCart();
     dir="ltr"
   >
  </div>
+ <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<script>
+emailjs.init({
+  publicKey: "s9YvGn5zlwPjVgWoH"
+});
+
+async function sendShopOrder(order) {
+  try {
+    await emailjs.send(
+      "service_nfnzdsc",
+      "template_cpsosvu",
+      {
+        roblox_name: order.roblox_name,
+        tiktok_username: order.tiktok_username,
+        order_items: order.order_items,
+        total_price: order.total_price
+      }
+    );
+
+    alert("تم إرسال طلبك بنجاح!");
+    return true;
+  } catch (error) {
+    alert("تعذر إرسال الطلب. حاول مرة أخرى.");
+    return false;
+  }
+}
+</script>
 </body>
   </html>
   
