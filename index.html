@@ -417,7 +417,8 @@ async function placeOrder(){
     total_price:total+" Robux"
    }
   );
-
+document.getElementById("reviewPanel").style.display="block";
+document.getElementById("reviewPanel").scrollIntoView({behavior:"smooth"});
   alert("تم إرسال طلبك بنجاح! ❤️\nYour order was sent successfully!");
 
   cart={};
