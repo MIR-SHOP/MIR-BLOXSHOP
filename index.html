@@ -314,7 +314,8 @@ function placeOrder(){
 
  <input id="reviewText" placeholder="اكتب تعليقك هنا">
 
- <button onclick="addReview()">إرسال التقييم</button>
+ <button onclick="addReview();document.getElementById('reviewPanel').style.display='none'">إرسال التقييم</button>
+<button onclick="document.getElementById('reviewPanel').style.display='none'">تخطي</button>
 
  <div id="reviews"></div>
 </div>
