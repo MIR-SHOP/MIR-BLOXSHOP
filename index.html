@@ -190,13 +190,15 @@ function addCart(i){
  const amount=quantities[i]||1;
 
  if((cart[i]||0)+amount>f[4]){
-  alert("عذراً، الكمية المطلوبة غير متوفرة!");
+  alert("عذراً، الكمية المطلوبة غير متوفرة!\nSorry, requested quantity is unavailable!");
   return;
  }
 
  cart[i]=(cart[i]||0)+amount;
  renderCart();
-}
+
+ showAddToast(f[0]);
+ }
 </script>
  
 <script>
