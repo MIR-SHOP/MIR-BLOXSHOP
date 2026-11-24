@@ -297,5 +297,60 @@ function placeOrder(){
 }
 </script>
  
+<div class="panel">
+ <h2>⭐ قيّم تجربتك</h2>
+
+ <p>اختار تقييمك للمتجر:</p>
+
+ <select id="rating" style="width:100%;padding:12px;border-radius:10px;background:#21172e;color:white">
+  <option value="5">⭐⭐⭐⭐⭐ ممتاز</option>
+  <option value="4">⭐⭐⭐⭐ جيد جداً</option>
+  <option value="3">⭐⭐⭐ جيد</option>
+  <option value="2">⭐⭐ مقبول</option>
+  <option value="1">⭐ يحتاج تحسين</option>
+ </select>
+
+ <input id="reviewName" placeholder="اسمك (اختياري)">
+
+ <input id="reviewText" placeholder="اكتب تعليقك هنا">
+
+ <button onclick="addReview()">إرسال التقييم</button>
+
+ <div id="reviews"></div>
+</div>
+
+<script>
+function addReview(){
+ const rating=document.getElementById("rating").value;
+ const name=document.getElementById("reviewName").value.trim()||"زائر";
+ const comment=document.getElementById("reviewText").value.trim();
+
+ if(!comment){
+  alert("اكتب تعليقك أولاً");
+  return;
+ }
+
+ const reviews=document.getElementById("reviews");
+ const item=document.createElement("div");
+ item.style.padding="10px";
+ item.style.borderBottom="1px solid #63358a";
+
+ const stars=document.createElement("div");
+ stars.textContent="⭐".repeat(Number(rating));
+
+ const author=document.createElement("b");
+ author.textContent=name;
+
+ const text=document.createElement("p");
+ text.textContent=comment;
+
+ item.append(stars,author,text);
+ reviews.prepend(item);
+
+ document.getElementById("reviewText").value="";
+ alert("شكراً على تقييمك ❤️");
+}
+</script>
+ 
 </body>
 </html>
