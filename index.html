@@ -428,5 +428,61 @@ async function placeOrder(){
 }
 </script>
  
+<script>
+const fruitImageFiles = {
+"Rocket":"Rocket_Fruit.png",
+"Spin":"Spin_Fruit.png",
+"Blade":"Blade_Fruit.png",
+"Spring":"Spring_Fruit.png",
+"Bomb":"Bomb_Fruit.png",
+"Smoke":"Smoke_Fruit.png",
+"Spike":"Spike_Fruit.png",
+"Flame":"Flame_Fruit.png",
+"Eagle":"Eagle_Fruit.png",
+"Ice":"Ice_Fruit.png",
+"Sand":"Sand_Fruit.png",
+"Dark":"Dark_Fruit.png",
+"Diamond":"Diamond_Fruit.png",
+"Light":"Light_Fruit.png",
+"Rubber":"Rubber_Fruit.png",
+"Ghost":"Ghost_Fruit.png",
+"Magma":"Magma_Fruit.png",
+"Quake":"Quake_Fruit.png",
+"Buddha":"Buddha_Fruit.png",
+"Love":"Love_Fruit.png",
+"Creation":"Creation_Fruit.png",
+"Spider":"Spider_Fruit.png",
+"Sound":"Sound_Fruit.png",
+"Phoenix":"Phoenix_Fruit.png",
+"Portal":"Portal_Fruit.png",
+"Lightning":"Lightning_Fruit.png",
+"Pain":"Pain_Fruit.png",
+"Blizzard":"Blizzard_Fruit.png",
+"Gravity":"Gravity_Fruit.png",
+"Mammoth":"Mammoth_Fruit.png",
+"T-Rex":"T-Rex_Fruit.png",
+"Dough":"Dough_Fruit.png",
+"Shadow":"Shadow_Fruit.png",
+"Venom":"Venom_Fruit.png",
+"Gas":"Gas_Fruit.png",
+"Spirit":"Spirit_Fruit.png",
+"Tiger":"Tiger_Fruit.png",
+"Yeti":"Yeti_Fruit.png",
+"Kitsune":"Kitsune_Fruit.png",
+"Control":"Control_Fruit.png",
+"Dragon (East)":"Dragon_East.png",
+"Dragon (West)":"Dragon_West.png"
+};
+
+fruits.forEach(f=>{
+ const file=fruitImageFiles[f[1]];
+ if(file){
+  f[2]=`<img src="https://raw.githubusercontent.com/blackxscripts/blox-fruits/main/${file}" style="width:110px;height:110px;object-fit:contain" onerror="this.outerHTML='💠'">`;
+ }
+});
+
+renderProducts();
+</script>
+ 
 </body>
 </html>
