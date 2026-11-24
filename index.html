@@ -153,9 +153,12 @@ let sending=false;
 
 function imageUrl(name){
  const images={
-  "Dragon (East)":"https://raw.githubusercontent.com/blackxscripts/blox-fruits/main/Dragon%20(East)_Fruit.png",
-  "Dragon (West)":"https://raw.githubusercontent.com/blackxscripts/blox-fruits/main/Dragon%20(West)_Fruit.png"
+  "Dragon (East)":"https://raw.githubusercontent.com/blackxscripts/blox-fruits/main/Dragon_East.png",
+  "Dragon (West)":"https://raw.githubusercontent.com/blackxscripts/blox-fruits/main/Dragon_West.png"
  };
+ const file=imageNames[name]||name;
+ return images[name]||"https://raw.githubusercontent.com/blackxscripts/blox-fruits/main/"+encodeURIComponent(file+"_Fruit.png");
+ }
  const file=imageNames[name]||name;
  return images[name]||"https://raw.githubusercontent.com/blackxscripts/blox-fruits/main/"+encodeURIComponent(file+"_Fruit.png");
  }
