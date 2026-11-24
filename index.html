@@ -352,5 +352,25 @@ function addReview(){
 }
 </script>
  
+<script>
+const originalAlert = window.alert;
+
+window.alert = function(message){
+ const translations = {
+ "السلة فارغة": "Your cart is empty",
+ "السلة فارغة!": "Your cart is empty!",
+ "شكراً على تقييمك ❤️": "Thank you for your review ❤️",
+ "شكراً على تقييمك!": "Thank you for your review!",
+ "اكتب اسم Roblox وTikTok أولاً": "Please enter your Roblox and TikTok usernames first",
+ "اكتب اسم Roblox وTikTok أولاً!": "Please enter your Roblox and TikTok usernames first!",
+ "عذراً، الكمية المطلوبة غير متوفرة!": "Sorry, requested quantity is unavailable!"
+ };
+
+ originalAlert.call(window,
+  message + (translations[message] ? "\n" + translations[message] : "")
+ );
+};
+</script>
+ 
 </body>
 </html>
