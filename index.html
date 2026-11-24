@@ -372,5 +372,61 @@ window.alert = function(message){
 };
 </script>
  
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<script>
+emailjs.init({
+ publicKey: "s9YvGn5zlwPjVgWoH"
+});
+
+async function placeOrder(){
+ const roblox=document.getElementById("robloxName").value.trim();
+ const tiktok=document.getElementById("tiktokName").value.trim();
+
+ if(!roblox || !tiktok){
+  alert("اكتب اسم Roblox وTikTok أولاً!\nPlease enter your usernames first!");
+  return;
+ }
+
+ const ids=Object.keys(cart);
+
+ if(ids.length===0){
+  alert("السلة فارغة!\nYour cart is empty!");
+  return;
+ }
+
+ let total=0;
+ let items="";
+
+ ids.forEach(id=>{
+  const f=fruits[Number(id)];
+  const count=cart[id];
+  items+=f[0]+" ("+f[1]+") × "+count+"\n";
+  total+=f[3]*count;
+ });
+
+ try{
+  await emailjs.send(
+   "service_nfnzdsc",
+   "template_cpsosvu",
+   {
+    roblox_name:roblox,
+    tiktok_username:tiktok,
+    order_items:items,
+    total_price:total+" Robux"
+   }
+  );
+
+  alert("تم إرسال طلبك بنجاح! ❤️\nYour order was sent successfully!");
+
+  cart={};
+  renderCart();
+
+ }catch(error){
+  alert("فشل إرسال الطلب، حاول مرة ثانية.\nFailed to send order. Please try again.");
+ }
+}
+</script>
+ 
 </body>
 </html>
