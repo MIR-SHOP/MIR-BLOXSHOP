@@ -96,5 +96,108 @@ h2{color:#c58aff}
 <h3 id="total">المجموع: 0 Robux</h3>
 </div>
 </div>
+ 
+<script>
+const fruits = [
+["روكيت","Rocket","🚀",25,5],
+["سبين","Spin","🌀",100,5],
+["بليد","Blade","⚔️",100,5],
+["سبرينغ","Spring","🌸",100,5],
+["بومب","Bomb","💣",100,5],
+["سموك","Smoke","☁️",100,5],
+["سبايك","Spike","🌵",100,5],
+["فليم","Flame","🔥",100,5],
+["إيغل","Eagle","🦅",100,5],
+["آيس","Ice","🧊",100,5],
+["ساند","Sand","🏜️",100,5],
+["دارك","Dark","🌑",100,5],
+["دايموند","Diamond","💎",100,5],
+["لايت","Light","✨",100,5],
+["ربر","Rubber","🟣",100,5],
+["غوست","Ghost","👻",100,5],
+["ماغما","Magma","🌋",100,5],
+["كويك","Quake","🌊",100,5],
+["بوذا","Buddha","🧘",100,5],
+["لوف","Love","💗",100,5],
+["كرييشن","Creation","🛡️",100,5],
+["سبايدر","Spider","🕸️",100,5],
+["ساوند","Sound","🎵",100,5],
+["فونيكس","Phoenix","🔥",100,5],
+["بورتال","Portal","🌀",1000,1],
+["لايتنينغ","Lightning","⚡",1050,2],
+["باين","Pain","💥",1100,2],
+["بليزارد","Blizzard","❄️",1125,0],
+["جرافيتي","Gravity","🌌",1150,1],
+["ماموث","Mammoth","🦣",1175,2],
+["تيريكس","T-Rex","🦖",1175,3],
+["دو","Dough","🍩",1200,3],
+["شادو","Shadow","🌑",1200,2],
+["فينوم","Venom","🐍",0,0],
+["غاز","Gas","💨",1250,0],
+["سبيريت","Spirit","👻",1275,2],
+["تايغر","Tiger","🐅",1500,1],
+["يتي","Yeti","⛄",1500,0],
+["ماغنيت","Magnet","🧲",1250,0],
+["كيتسوني","Kitsune","🦊",2000,2],
+["كونترول","Control","🎮",2000,0],
+["دراجون شرقي","Dragon (East)","🐉",2500,0],
+["دراجون غربي","Dragon (West)","🐉",2500,0]
+];
+
+let cart = {};
+let quantities = {};
+
+function renderProducts(){
+ const area=document.getElementById("products");
+ const search=document.getElementById("search").value.toLowerCase();
+ area.innerHTML="";
+
+ fruits.forEach((f,i)=>{
+  if(!f[0].toLowerCase().includes(search) &&
+     !f[1].toLowerCase().includes(search)) return;
+
+  const sold=f[4]<=0;
+  const qty=quantities[i]||1;
+
+  area.innerHTML+=`
+   <div class="card">
+    <div style="font-size:55px">${f[2]}</div>
+    <h3>${f[0]}</h3>
+    <p>${f[1]}</p>
+    <p class="price">${f[3]} Robux</p>
+    <p class="${sold?'out':'stock'}">
+     ${sold?'نفدت الكمية':'متوفرة'}
+    </p>
+    <div class="qty">
+     <button onclick="changeQty(${i},-1)" ${sold?'disabled':''}>−</button>
+     <b>${qty}</b>
+     <button onclick="changeQty(${i},1)" ${sold?'disabled':''}>+</button>
+    </div>
+    <button onclick="addCart(${i})" ${sold?'disabled':''}>
+     أضف للسلة
+    </button>
+   </div>`;
+ });
+}
+
+function changeQty(i,n){
+ quantities[i]=Math.max(1,(quantities[i]||1)+n);
+ renderProducts();
+}
+
+function addCart(i){
+ const f=fruits[i];
+ const amount=quantities[i]||1;
+
+ if((cart[i]||0)+amount>f[4]){
+  alert("عذراً، الكمية المطلوبة غير متوفرة!");
+  return;
+ }
+
+ cart[i]=(cart[i]||0)+amount;
+ renderCart();
+}
+</script>
+ 
 </body>
 </html>
