@@ -1,1 +1,301 @@
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MIR BLOX SHOP</title>
+
+<style>
+*{
+ box-sizing:border-box;
+}
+body{
+ margin:0;
+ background:#090611;
+ color:white;
+ font-family:Arial,sans-serif;
+ padding-bottom:40px;
+}
+header{
+ background:linear-gradient(130deg,#35145b,#10091d);
+ text-align:center;
+ padding:28px 12px;
+ border-bottom:2px solid #a855f7;
+}
+header h1{
+ color:#d9adff;
+ font-size:29px;
+ margin:0;
+}
+header p{
+ color:#ddd;
+ margin-bottom:0;
+}
+.container{
+ width:100%;
+ max-width:1100px;
+ margin:auto;
+ padding:15px;
+}
+.section-title{
+ color:#d8a5ff;
+ font-size:22px;
+ margin:25px 0 15px;
+}
+.products{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:12px;
+}
+.product{
+ background:#191126;
+ border:1px solid #49305f;
+ border-radius:15px;
+ padding:10px;
+ text-align:center;
+ min-width:0;
+}
+.product img{
+ width:100%;
+ height:125px;
+ object-fit:contain;
+}
+.product h3{
+ margin:8px 0;
+ font-size:17px;
+}
+.product p{
+ margin:6px 0;
+ color:#c9b8d8;
+}
+.price{
+ color:#ffd166;
+ font-weight:bold;
+ font-size:16px;
+ margin:12px 0;
+}
+.stock{
+ color:#9ee6a8;
+ font-size:13px;
+}
+button{
+ border:0;
+ border-radius:10px;
+ padding:12px;
+ background:#853bc1;
+ color:white;
+ font-weight:bold;
+ cursor:pointer;
+}
+button:disabled{
+ background:#555;
+ cursor:not-allowed;
+}
+.cart-box,.panel{
+ background:#171020;
+ border:1px solid #49305f;
+ border-radius:17px;
+ padding:16px;
+ margin-top:20px;
+}
+.cart-item{
+ background:#21172e;
+ border-radius:12px;
+ padding:12px;
+ margin:10px 0;
+}
+.cart-item img{
+ width:55px;
+ height:55px;
+ object-fit:contain;
+}
+.cart-item button{
+ padding:8px 12px;
+ margin:4px;
+}
+.total{
+ color:#ffd166;
+ font-size:21px;
+ font-weight:bold;
+ margin-top:20px;
+}
+input,textarea{
+ width:100%;
+ padding:14px;
+ margin:9px 0;
+ background:#0d0815;
+ border:1px solid #543773;
+ border-radius:10px;
+ color:white;
+ font-size:15px;
+}
+textarea{
+ min-height:100px;
+ resize:vertical;
+}
+.payment-methods{
+ display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:9px;
+ margin:15px 0;
+}
+.payment-card{
+ background:#21172e;
+ border:2px solid #49305f;
+ border-radius:13px;
+ padding:12px 5px;
+ text-align:center;
+ cursor:pointer;
+ min-width:0;
+}
+.payment-card img{
+ width:55px;
+ height:45px;
+ object-fit:contain;
+}
+.payment-card.active{
+ border-color:#b45cff;
+ background:#38204c;
+}
+.payment-card p{
+ font-size:13px;
+ margin:7px 0 0;
+}
+.full{
+ width:100%;
+ margin-top:12px;
+}
+.reviews{
+ background:#21172e;
+ padding:14px;
+ border-radius:12px;
+ margin:10px 0;
+ border:1px solid #49305f;
+}
+#reviewPanel{
+ display:none;
+}
+#starRating{
+ display:flex;
+ direction:ltr;
+ justify-content:center;
+ gap:10px;
+ font-size:36px;
+ margin:15px 0;
+}
+#starRating span{
+ color:#aaa;
+ cursor:pointer;
+}
+#ratingText{
+ text-align:center;
+ color:#ffd166;
+}
+@media(min-width:650px){
+ .products{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+ }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+ <h1>🍎 MIR BLOX SHOP</h1>
+ <p>متجرك الأول لفواكه Blox Fruits</p>
+ <p>Welcome To MIR BLOX SHOP</p>
+</header>
+
+<div class="container">
+
+ <h2 class="section-title">🍇 الفواكه المتوفرة</h2>
+ <div class="products" id="products"></div>
+
+ <div class="cart-box">
+  <h2>🛒 سلة المشتريات</h2>
+  <div id="cartItems">السلة فارغة</div>
+  <p class="total" id="total">الإجمالي: 0</p>
+ </div>
+
+ <div class="panel">
+  <h2>📦 إتمام الطلب</h2>
+
+  <input id="robloxName"
+   placeholder="اسمك في Roblox">
+
+  <input id="tiktokName"
+   placeholder="اسمك في TikTok">
+
+  <h3>💳 اختر طريقة الدفع</h3>
+
+  <div class="payment-methods">
+
+   <div class="payment-card active"
+    id="pay-robux"
+    onclick="selectPayment('robux')">
+    <div>R$</div>
+    <p>Robux</p>
+   </div>
+
+   <div class="payment-card"
+    id="pay-libyana"
+    onclick="selectPayment('libyana')">
+    <div>📱</div>
+    <p>ليبيانا</p>
+   </div>
+
+   <div class="payment-card"
+    id="pay-madar"
+    onclick="selectPayment('madar')">
+    <div>📶</div>
+    <p>المدار</p>
+   </div>
+
+  </div>
+
+  <p id="paymentInfo">الدفع بواسطة Robux</p>
+
+  <button class="full"
+   onclick="placeOrder()">
+   تأكيد الطلب
+  </button>
+ </div>
+
+ <div class="panel" id="reviewPanel">
+  <h2>⭐ قيّم تجربتك</h2>
+
+  <div id="starRating">
+   <span onclick="setRating(1)">☆</span>
+   <span onclick="setRating(2)">☆</span>
+   <span onclick="setRating(3)">☆</span>
+   <span onclick="setRating(4)">☆</span>
+   <span onclick="setRating(5)">☆</span>
+  </div>
+
+  <p id="ratingText">اضغط على النجوم للتقييم</p>
+
+  <textarea id="reviewText"
+   placeholder="اكتب رأيك في متجرنا"></textarea>
+
+  <button class="full" onclick="sendReview()">
+   إرسال التقييم ⭐
+  </button>
+
+  <button class="full" onclick="skipReview()">
+   تخطي
+  </button>
+ </div>
+
+ <h2 class="section-title">💬 آراء الزبائن</h2>
+ <div id="reviewsList"></div>
+
+<!-- مكان تركيب الأجزاء 2 و3 و4 و5 -->
+
+</div>
+
+<!-- نهاية الملف: لا تحذف هذين السطرين -->
+</body>
+  </html>
+  
