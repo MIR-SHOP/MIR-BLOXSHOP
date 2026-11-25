@@ -582,6 +582,110 @@ ${details}
 }
 </script>
  
+<script>
+let selectedRating = 0;
+
+function setRating(value) {
+  selectedRating = value;
+
+  const stars = document.querySelectorAll("#starRating span");
+
+  stars.forEach((star, index) => {
+    star.style.color = index < value ? "#ffc107" : "#777";
+  });
+
+  document.getElementById("ratingText").textContent =
+    value + " من 5 نجوم";
+}
+
+function renderReviews() {
+  const area = document.getElementById("reviewsList");
+  if (!area) return;
+
+  const reviews = JSON.parse(
+    localStorage.getItem("mirReviews") || "[]"
+  );
+
+  area.innerHTML = "";
+
+  reviews.slice().reverse().forEach(review => {
+    const item = document.createElement("div");
+    item.style.cssText =
+      "background:#21172e;padding:12px;margin:10px 0;border-radius:12px";
+
+    const stars = document.createElement("div");
+    stars.textContent = "⭐".repeat(review.rating);
+
+    const name = document.createElement("b");
+    name.textContent = review.name;
+
+    const message = document.createElement("p");
+    message.textContent = review.message;
+
+    item.append(stars, name, message);
+    area.appendChild(item);
+  });
+}
+
+function sendReview() {
+  if (!selectedRating) {
+    alert("اختار عدد النجوم أولاً!");
+    return;
+  }
+
+  const message = document.getElementById("reviewMessage").value.trim();
+
+  if (!message) {
+    alert("اكتب رأيك في المتجر!");
+    return;
+  }
+
+  const reviews = JSON.parse(
+    localStorage.getItem("mirReviews") || "[]"
+  );
+
+  reviews.push({
+    rating: selectedRating,
+    message: message,
+    name: "زبون المتجر"
+  });
+
+  localStorage.setItem("mirReviews", JSON.stringify(reviews));
+
+  alert("شكراً على تقييمك ❤️");
+
+  document.getElementById("reviewPanel").style.display = "none";
+  document.getElementById("reviewMessage").value = "";
+  selectedRating = 0;
+
+  renderReviews();
+}
+
+function skipReview() {
+  document.getElementById("reviewPanel").style.display = "none";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const starsArea = document.getElementById("starRating");
+
+  if (starsArea) {
+    starsArea.innerHTML = "";
+
+    for (let i = 1; i <= 5; i++) {
+      const star = document.createElement("span");
+      star.textContent = "★";
+      star.style.cssText =
+        "font-size:38px;color:#777;cursor:pointer;padding:5px";
+
+      star.addEventListener("click", () => setRating(i));
+      starsArea.appendChild(star);
+    }
+  }
+
+  renderReviews();
+});
+</script>
+ 
 </body>
   </html>
   
