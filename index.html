@@ -157,5 +157,109 @@ input,select,textarea{
 <div id="reviewsList"></div>
 
 </div>
+ 
+<script>
+const fruits = [
+ {id:1,name:"Rocket",ar:"روكيت",img:"https://static.wikia.nocookie.net/blox-fruits/images/3/3d/Rocket_Fruit.png",robux:50,lyd:5,stock:20},
+ {id:2,name:"Spin",ar:"سبين",img:"https://static.wikia.nocookie.net/blox-fruits/images/1/1c/Spin_Fruit.png",robux:75,lyd:7,stock:20},
+ {id:3,name:"Blade",ar:"بليد",img:"https://static.wikia.nocookie.net/blox-fruits/images/9/9b/Blade_Fruit.png",robux:100,lyd:10,stock:20},
+ {id:4,name:"Spring",ar:"سبرينغ",img:"https://static.wikia.nocookie.net/blox-fruits/images/2/2d/Spring_Fruit.png",robux:180,lyd:18,stock:20},
+ {id:5,name:"Bomb",ar:"بومب",img:"https://static.wikia.nocookie.net/blox-fruits/images/8/8b/Bomb_Fruit.png",robux:220,lyd:22,stock:20},
+ {id:6,name:"Smoke",ar:"سموك",img:"https://static.wikia.nocookie.net/blox-fruits/images/8/83/Smoke_Fruit.png",robux:250,lyd:25,stock:20},
+ {id:7,name:"Spike",ar:"سبايك",img:"https://static.wikia.nocookie.net/blox-fruits/images/a/a0/Spike_Fruit.png",robux:300,lyd:30,stock:20},
+ {id:8,name:"Flame",ar:"فليم",img:"https://static.wikia.nocookie.net/blox-fruits/images/2/2c/Flame_Fruit.png",robux:550,lyd:55,stock:20},
+ {id:9,name:"Ice",ar:"آيس",img:"https://static.wikia.nocookie.net/blox-fruits/images/0/0e/Ice_Fruit.png",robux:750,lyd:75,stock:20},
+ {id:10,name:"Light",ar:"لايت",img:"https://static.wikia.nocookie.net/blox-fruits/images/2/2d/Light_Fruit.png",robux:1100,lyd:110,stock:20},
+ {id:11,name:"Magma",ar:"ماغما",img:"https://static.wikia.nocookie.net/blox-fruits/images/5/5c/Magma_Fruit.png",robux:1300,lyd:130,stock:20},
+ {id:12,name:"Buddha",ar:"بوذا",img:"https://static.wikia.nocookie.net/blox-fruits/images/8/8d/Buddha_Fruit.png",robux:1800,lyd:180,stock:20},
+ {id:13,name:"Portal",ar:"بورتال",img:"https://static.wikia.nocookie.net/blox-fruits/images/3/3e/Portal_Fruit.png",robux:2000,lyd:200,stock:20},
+ {id:14,name:"Dragon",ar:"دراغون",img:"https://static.wikia.nocookie.net/blox-fruits/images/0/0e/Dragon_Fruit.png",robux:5000,lyd:500,stock:20}
+];
+
+let cart = {};
+
+function getPrice(f){
+ return document.getElementById("payment").value==="robux"
+ ? f.robux+" Robux"
+ : f.lyd+" دينار";
+}
+
+function renderProducts(){
+ const box=document.getElementById("products");
+ box.innerHTML="";
+
+ fruits.forEach(f=>{
+  box.innerHTML+=`
+  <div class="product">
+   <img src="${f.img}" alt="${f.name}"
+    onerror="this.alt='تعذر تحميل الصورة'">
+   <h3>${f.name}</h3>
+   <p>${f.ar}</p>
+   <div class="price">${getPrice(f)}</div>
+   <p>المخزون: ${f.stock}</p>
+   <button onclick="addToCart(${f.id})"
+    ${f.stock<=0?"disabled":""}>
+    ${f.stock<=0?"نفدت الكمية":"إضافة للسلة"}
+   </button>
+  </div>`;
+ });
+}
+
+function addToCart(id){
+ const f=fruits.find(x=>x.id===id);
+ if(cart[id] && cart[id].qty>=f.stock){
+  alert("الكمية غير متوفرة");
+  return;
+ }
+ if(!cart[id])cart[id]={qty:0};
+ cart[id].qty++;
+ renderCart();
+}
+
+function removeFromCart(id){
+ if(!cart[id])return;
+ cart[id].qty--;
+ if(cart[id].qty<=0)delete cart[id];
+ renderCart();
+}
+
+function renderCart(){
+ const box=document.getElementById("cartItems");
+ let total=0;
+ let html="";
+
+ for(const id in cart){
+  const f=fruits.find(x=>x.id==id);
+  const qty=cart[id].qty;
+  const price=document.getElementById("payment").value==="robux"
+   ? f.robux:f.lyd;
+  total+=price*qty;
+
+  html+=`
+  <div class="reviews">
+   <b>${f.name} - ${f.ar}</b>
+   <p>الكمية: ${qty}</p>
+   <p>${price*qty} ${document.getElementById("payment").value==="robux"?"Robux":"دينار"}</p>
+   <button onclick="removeFromCart(${id})">➖ إزالة واحدة</button>
+  </div>`;
+ }
+
+ box.innerHTML=html||"السلة فارغة";
+ document.getElementById("total").innerText=
+ "الإجمالي: "+total+" "+
+ (document.getElementById("payment").value==="robux"?"Robux":"دينار");
+}
+
+function updatePrices(){
+ renderProducts();
+ renderCart();
+}
+
+renderProducts();
+renderCart();
+</script>
+</body>
+</html>
+
 </body>
 </html>
