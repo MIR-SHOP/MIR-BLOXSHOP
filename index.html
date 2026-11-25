@@ -254,6 +254,50 @@ renderCart();
  <input id="tiktokName"
  placeholder="اكتب اسمك في TikTok">
 
+<div class="payment-box">
+<h3>💳 اختر طريقة الدفع</h3>
+<div class="payment-options">
+
+<div class="pay-card" onclick="choosePay(this,'Robux')">
+<img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Robux_2019_Logo.svg">
+<b>Robux</b>
+<small>الدفع بالروبوكس</small>
+</div>
+
+<div class="pay-card" onclick="choosePay(this,'ليبيانا')">
+<img src="https://www.libyana.ly/favicon.ico">
+<b>ليبيانا</b>
+<small>رصيد ليبيانا</small>
+</div>
+
+<div class="pay-card" onclick="choosePay(this,'المدار')">
+<img src="https://almadar.ly/favicon.ico">
+<b>المدار</b>
+<small>رصيد المدار</small>
+</div>
+
+</div>
+<input type="hidden" id="paymentMethod">
+</div>
+
+<style>
+.payment-box{background:#160d22;padding:15px;border-radius:15px;color:white}
+.payment-options{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.pay-card{background:#241532;border:2px solid #50316a;border-radius:13px;padding:12px 5px;text-align:center;cursor:pointer;color:white}
+.pay-card img{width:48px;height:48px;object-fit:contain;display:block;margin:0 auto 8px}
+.pay-card b,.pay-card small{display:block}
+.pay-card small{font-size:10px;color:#cbb6dc;margin-top:5px}
+.pay-card.selected{border-color:#d18aff;background:#512477;box-shadow:0 0 13px #a855f7}
+</style>
+
+<script>
+function choosePay(el,method){
+document.querySelectorAll('.pay-card').forEach(x=>x.classList.remove('selected'));
+el.classList.add('selected');
+document.getElementById('paymentMethod').value=method;
+}
+</script>
+ 
  <button onclick="placeOrder()">
  تأكيد الطلب
  </button>
