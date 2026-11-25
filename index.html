@@ -199,6 +199,51 @@ function addCart(i){
 <h3 id="total">المجموع: 0 Robux</h3>
 </div>
 </div>
+ 
+<script>
+function renderCart(){
+ const area=document.getElementById("cartItems");
+ const ids=Object.keys(cart);
+
+ if(ids.length===0){
+  area.innerHTML="السلة فارغة";
+  document.getElementById("total").textContent="المجموع: 0 Robux";
+  return;
+ }
+
+ let total=0;
+ area.innerHTML="";
+
+ ids.forEach(id=>{
+  const i=Number(id);
+  const f=fruits[i];
+  const count=cart[i];
+  const price=f[3]*count;
+  total+=price;
+
+  area.innerHTML+=`
+   <div style="border-bottom:1px solid #63358a;padding:10px">
+    <b>${f[0]}</b>
+    <p>${count} × ${f[3]} = ${price} Robux</p>
+    <button onclick="removeCart(${i})">حذف</button>
+   </div>`;
+ });
+
+ document.getElementById("total").textContent=
+ "المجموع: "+total+" Robux";
+}
+
+function removeCart(i){
+ delete cart[i];
+ renderCart();
+}
+
+document.getElementById("search").addEventListener("input",renderProducts);
+
+renderProducts();
+renderCart();
+</script>
+ 
 </body>
   </html>
 
