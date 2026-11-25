@@ -613,58 +613,130 @@ function renderReviews() {
     item.style.cssText =
       "background:#21172e;padding:12px;margin:10px 0;border-radius:12px";
 
-    const stars = document.createElement("div");
-    stars.textContent = "⭐".repeat(review.rating);
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 
-    const name = document.createElement("b");
-    name.textContent = review.name;
+<script>
+// بيانات Firebase
+const firebaseConfig = {
+  apiKey: "ضع_API_KEY",
+  authDomain: "ضع_AUTH_DOMAIN",
+  projectId: "ضع_PROJECT_ID",
+  storageBucket: "ضع_STORAGE_BUCKET",
+  messagingSenderId: "ضع_MESSAGING_SENDER_ID",
+  appId: "ضع_APP_ID"
+};
 
-    const message = document.createElement("p");
-    message.textContent = review.message;
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
-    item.append(stars, name, message);
-    area.appendChild(item);
+let selectedRating = 0;
+
+// اختيار النجوم
+function setRating(value) {
+  selectedRating = value;
+
+  document.querySelectorAll("#starRating span").forEach((star, index) => {
+    star.style.color = index < value ? "#ffc107" : "#777";
   });
+
+  document.getElementById("ratingText").textContent =
+    value + " من 5 نجوم";
 }
 
-function sendReview() {
+// عرض التقييمات
+async function renderReviews() {
+  const area = document.getElementById("reviewsList");
+  if (!area) return;
+
+  area.innerHTML = "<h2>⭐ تقييمات الزبائن</h2>";
+
+  try {
+    const snapshot = await db.collection("reviews")
+      .orderBy("createdAt", "desc")
+      .limit(50)
+      .get();
+
+    if (snapshot.empty) {
+      area.innerHTML += "<p>لا توجد تقييمات حتى الآن.</p>";
+      return;
+    }
+
+    snapshot.forEach(doc => {
+      const review = doc.data();
+
+      const card = document.createElement("div");
+      card.style.cssText =
+        "background:#21172e;padding:14px;margin:10px 0;border-radius:12px";
+
+      const stars = document.createElement("div");
+      stars.textContent = "⭐".repeat(review.rating);
+
+      const message = document.createElement("p");
+      message.textContent = review.message;
+
+      card.append(stars, message);
+      area.appendChild(card);
+    });
+  } catch (error) {
+    area.innerHTML += "<p>تعذر تحميل التقييمات.</p>";
+    console.error(error);
+  }
+}
+
+// إرسال التقييم
+async function sendReview() {
+  const input = document.getElementById("reviewMessage");
+  const message = input.value.trim();
+
   if (!selectedRating) {
-    alert("اختار عدد النجوم أولاً!");
+    alert("اختار النجوم أولاً!");
     return;
   }
-
-  const message = document.getElementById("reviewMessage").value.trim();
 
   if (!message) {
-    alert("اكتب رأيك في المتجر!");
+    alert("اكتب رأيك أولاً!");
     return;
   }
 
-  const reviews = JSON.parse(
-    localStorage.getItem("mirReviews") || "[]"
-  );
+  if (message.length > 300) {
+    alert("الحد الأقصى 300 حرف.");
+    return;
+  }
 
-  reviews.push({
-    rating: selectedRating,
-    message: message,
-    name: "زبون المتجر"
-  });
+  try {
+    await db.collection("reviews").add({
+      rating: selectedRating,
+      message: message,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
 
-  localStorage.setItem("mirReviews", JSON.stringify(reviews));
+    alert("تم إرسال تقييمك بنجاح ❤️");
 
-  alert("شكراً على تقييمك ❤️");
+    input.value = "";
+    selectedRating = 0;
 
-  document.getElementById("reviewPanel").style.display = "none";
-  document.getElementById("reviewMessage").value = "";
-  selectedRating = 0;
+    document.querySelectorAll("#starRating span").forEach(star => {
+      star.style.color = "#777";
+    });
 
-  renderReviews();
+    document.getElementById("ratingText").textContent = "";
+    document.getElementById("reviewPanel").style.display = "none";
+
+    renderReviews();
+
+  } catch (error) {
+    alert("تعذر إرسال التقييم. تأكد من إعداد Firebase.");
+    console.error(error);
+  }
 }
 
+// تخطي التقييم
 function skipReview() {
   document.getElementById("reviewPanel").style.display = "none";
 }
 
+// تشغيل النجوم والتقييمات
 document.addEventListener("DOMContentLoaded", () => {
   const starsArea = document.getElementById("starRating");
 
@@ -677,7 +749,7 @@ document.addEventListener("DOMContentLoaded", () => {
       star.style.cssText =
         "font-size:38px;color:#777;cursor:pointer;padding:5px";
 
-      star.addEventListener("click", () => setRating(i));
+      star.onclick = () => setRating(i);
       starsArea.appendChild(star);
     }
   }
@@ -686,6 +758,4 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
  
-</body>
-  </html>
-  
+    
