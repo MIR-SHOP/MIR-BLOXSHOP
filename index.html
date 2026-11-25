@@ -458,5 +458,91 @@ renderReviews();
 </body>
 </html>
 
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+ getFirestore,
+ collection,
+ addDoc,
+ getDocs,
+ query,
+ orderBy
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+ apiKey: "ضع_API_KEY",
+ authDomain: "ضع_AUTH_DOMAIN",
+ projectId: "ضع_PROJECT_ID",
+ storageBucket: "ضع_STORAGE_BUCKET",
+ messagingSenderId: "ضع_MESSAGING_SENDER_ID",
+ appId: "ضع_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function savePublicReview(rating,comment){
+
+ await addDoc(collection(db,"reviews"),{
+  rating:Number(rating),
+  comment:comment,
+  createdAt:Date.now()
+ });
+
+}
+
+async function loadPublicReviews(){
+
+ const box=document.getElementById("reviewsList");
+
+ try{
+
+  const q=query(
+   collection(db,"reviews"),
+   orderBy("createdAt","desc")
+  );
+
+  const snapshot=await getDocs(q);
+
+  box.innerHTML="";
+
+  snapshot.forEach(doc=>{
+
+   const r=doc.data();
+
+   const item=document.createElement("div");
+   item.className="reviews";
+
+   const stars=document.createElement("b");
+   stars.textContent="⭐".repeat(r.rating);
+
+   const comment=document.createElement("p");
+   comment.textContent=r.comment;
+
+   item.append(stars,comment);
+   box.appendChild(item);
+
+  });
+
+  if(snapshot.empty){
+   box.textContent="لا توجد آراء حتى الآن ❤️";
+  }
+
+ }catch(error){
+  box.textContent="تعذر تحميل الآراء حالياً";
+ }
+
+}
+
+window.loadPublicReviews=loadPublicReviews;
+
+window.savePublicReview=savePublicReview;
+
+loadPublicReviews();
+</script>
+</body>
+</html>
+
 </body>
 </html>
