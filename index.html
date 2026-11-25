@@ -162,26 +162,34 @@ function addFruit(i){
   return;
  }
  cart[i]=(cart[i]||0)+1;
- showCart();
-}
+ function showCart(){
+  let total = 0;
+  let html = "";
 
-function deleteFruit(i){
- delete cart[i];
- showCart();
-}
+  Object.keys(cart).forEach(i => {
+    let f = fruitNames[i];
+    let quantity = cart[i];
+    let price = prices[i];
+    let sum = price * quantity;
 
-function showCart(){
- let total=0;
- let html="";
- Object.keys(cart).forEach(i=>{
-  let f=fruitNames[i];
-  let sum=prices[i]*cart[i];
-  total+=sum;
-  html+=`
-  <div style="padding:10px;border-bottom:1px solid #70449a">
-   ${f[1]} | ${f[0]} × ${cart[i]}
-   <button onclick="deleteFruit(${i})">حذف</button>
-  </div>`;
+    total += sum;
+
+    html += `
+      <div style="padding:12px;border-bottom:1px solid #70449a">
+        <b>${f[1]} | ${f[0]}</b>
+        <p>السعر: ${price}</p>
+        <p>الكمية: ${quantity}</p>
+        <p>المجموع: ${sum}</p>
+        <button onclick="deleteFruit(${i})">حذف</button>
+      </div>
+    `;
+  });
+
+  document.getElementById("cartItems").innerHTML =
+    html || "السلة فارغة | Cart is empty";
+
+  document.getElementById("total").textContent = total;
+                 }
  });
  document.getElementById("cartItems").innerHTML=
  html||"السلة فارغة | Cart is empty";
