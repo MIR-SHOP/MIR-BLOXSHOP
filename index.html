@@ -313,5 +313,159 @@ async function submitShopOrder(){
 }
 </script>
   
+<style>
+.review-box{
+ background:#21172e;
+ border:1px solid #70449a;
+ border-radius:15px;
+ padding:16px;
+ margin-top:20px;
+}
+.review-box textarea{
+ width:100%;
+ min-height:90px;
+ padding:12px;
+ border-radius:10px;
+ background:#120c1c;
+ color:white;
+ border:1px solid #70449a;
+}
+.stars{
+ display:flex;
+ gap:8px;
+ margin:15px 0;
+}
+.stars button{
+ background:none;
+ border:0;
+ font-size:30px;
+ color:#777;
+ cursor:pointer;
+}
+.stars button.active{color:gold}
+.review-submit,.skip-review{
+ width:100%;
+ padding:12px;
+ border:0;
+ border-radius:10px;
+ color:white;
+ margin-top:9px;
+}
+.review-submit{background:#873bd1}
+.skip-review{background:#51445f}
+.review-item{
+ background:#160f20;
+ padding:12px;
+ border-radius:10px;
+ margin-top:10px;
+}
+.gold{color:gold}
+</style>
+
+<div class="review-box" id="reviewPanel">
+ <h2>⭐ قيّم تجربتك | Rate us</h2>
+ <p>رأيك يهمنا ❤️</p>
+
+ <div class="stars" id="reviewStars">
+  <button onclick="chooseStar(1)">★</button>
+  <button onclick="chooseStar(2)">★</button>
+  <button onclick="chooseStar(3)">★</button>
+  <button onclick="chooseStar(4)">★</button>
+  <button onclick="chooseStar(5)">★</button>
+ </div>
+
+ <textarea id="reviewText"
+ placeholder="اكتب رأيك في المتجر... | Write your review"></textarea>
+
+ <button class="review-submit" onclick="addReview()">
+ إرسال التقييم | Submit
+ </button>
+
+ <button class="skip-review" onclick="skipReview()">
+ تخطي | Skip
+ </button>
+</div>
+
+<div class="review-box">
+ <h2>⭐ آراء الزبائن | Reviews</h2>
+ <div id="reviewsList"></div>
+</div>
+
+<script>
+let selectedStars=5;
+
+function chooseStar(n){
+ selectedStars=n;
+ document.querySelectorAll("#reviewStars button")
+ .forEach((b,i)=>{
+  b.classList.toggle("active",i<n);
+ });
+}
+
+function addReview(){
+ const comment=document.getElementById("reviewText").value.trim();
+
+ if(!comment){
+  alert("اكتب رأيك أولاً");
+  return;
+ }
+
+ const badWords=[
+ "كس","شرموط","قحبة","زب","خول",
+ "fuck","shit","bitch"
+ ];
+
+ if(badWords.some(w=>comment.toLowerCase().includes(w))){
+  alert("يرجى استخدام كلمات محترمة");
+  return;
+ }
+
+ const reviews=JSON.parse(
+ localStorage.getItem("mirReviews")||"[]"
+ );
+
+ reviews.unshift({
+ comment:comment,
+ stars:selectedStars
+ });
+
+ localStorage.setItem("mirReviews",JSON.stringify(reviews));
+
+ document.getElementById("reviewText").value="";
+ document.getElementById("reviewPanel").style.display="none";
+
+ showReviews();
+ alert("شكراً على تقييمك ⭐");
+}
+
+function skipReview(){
+ document.getElementById("reviewPanel").style.display="none";
+}
+
+function escapeReview(s){
+ return String(s).replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",
+ '"':"&quot;","'":"&#39;"
+ }[c]));
+}
+
+function showReviews(){
+ const reviews=JSON.parse(
+ localStorage.getItem("mirReviews")||"[]"
+ );
+
+ document.getElementById("reviewsList").innerHTML=
+ reviews.map(r=>`
+ <div class="review-item">
+  <div class="gold">${"★".repeat(r.stars)}${"☆".repeat(5-r.stars)}</div>
+  <p>${escapeReview(r.comment)}</p>
+ </div>
+ `).join("")||"لا توجد تقييمات حتى الآن";
+}
+
+chooseStar(5);
+showReviews();
+</script>
+  
 </body>
 </html>
