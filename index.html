@@ -299,27 +299,151 @@ function placeOrder(){
 }
 </script>
  
-<div class="panel">
- <h2>⭐ قيّم تجربتك</h2>
 
- <p>اختار تقييمك للمتجر:</p>
+<style>
+#reviewPopup {
+ display:none;
+ position:fixed;
+ inset:0;
+ background:#000c;
+ z-index:999999;
+ align-items:center;
+ justify-content:center;
+ padding:15px;
+}
+.reviewBox {
+ background:#170d24;
+ border:1px solid #a855f7;
+ border-radius:18px;
+ padding:22px;
+ width:100%;
+ max-width:380px;
+ text-align:center;
+ color:white;
+ font-family:Arial;
+}
+.reviewStars {
+ display:flex;
+ justify-content:center;
+ gap:10px;
+ direction:ltr;
+ margin:18px 0;
+}
+.reviewStars span {
+ font-size:35px;
+ color:#666;
+ cursor:pointer;
+}
+.reviewStars span.active {color:#ffc107}
+#reviewPopup input,
+#reviewPopup textarea {
+ width:100%;
+ box-sizing:border-box;
+ padding:12px;
+ margin:7px 0;
+ border:1px solid #70449b;
+ border-radius:9px;
+ background:#271536;
+ color:white;
+ font-size:15px;
+}
+#reviewPopup button {
+ padding:12px;
+ border:0;
+ border-radius:9px;
+ cursor:pointer;
+ margin-top:8px;
+ font-weight:bold;
+}
+#sendReview {
+ background:#a855f7;
+ color:white;
+ width:100%;
+}
+#skipReview {
+ background:#382746;
+ color:white;
+ width:100%;
+}
+</style>
 
- <select id="rating" style="width:100%;padding:12px;border-radius:10px;background:#21172e;color:white">
-  <option value="5">⭐⭐⭐⭐⭐ ممتاز</option>
-  <option value="4">⭐⭐⭐⭐ جيد جداً</option>
-  <option value="3">⭐⭐⭐ جيد</option>
-  <option value="2">⭐⭐ مقبول</option>
-  <option value="1">⭐ يحتاج تحسين</option>
- </select>
+<div id="reviewPopup">
+ <div class="reviewBox">
+  <h2>⭐ قيّم تجربتك معنا</h2>
+  <p>كيف كانت تجربتك؟</p>
+  <h3>Rate your experience!</h3>
 
- <input id="reviewName" placeholder="اسمك (اختياري)">
+  <div class="reviewStars">
+   <span onclick="chooseStar(1)">★</span>
+   <span onclick="chooseStar(2)">★</span>
+   <span onclick="chooseStar(3)">★</span>
+   <span onclick="chooseStar(4)">★</span>
+   <span onclick="chooseStar(5)">★</span>
+  </div>
 
- <input id="reviewText" placeholder="اكتب تعليقك هنا">
+  <input id="reviewName"
+   placeholder="اسمك (اختياري) / Name (optional)">
 
- <button onclick="addReview()">إرسال التقييم</button>
+  <textarea id="reviewText" rows="3"
+   placeholder="اكتب رأيك هنا / Write your review"></textarea>
 
- <div id="reviews"></div>
+  <button id="sendReview" onclick="submitReview()">
+   إرسال التقييم / Submit
+  </button>
+
+  <button id="skipReview" onclick="closeReview()">
+   تخطي / Skip
+  </button>
+ </div>
 </div>
+
+<script>
+let selectedStars = 0;
+
+function openReview(){
+ selectedStars = 0;
+ document.querySelectorAll(".reviewStars span")
+  .forEach(s=>s.classList.remove("active"));
+
+ document.getElementById("reviewName").value="";
+ document.getElementById("reviewText").value="";
+ document.getElementById("reviewPopup").style.display="flex";
+}
+
+function chooseStar(n){
+ selectedStars=n;
+ document.querySelectorAll(".reviewStars span")
+  .forEach((s,i)=>{
+   s.classList.toggle("active",i<n);
+  });
+}
+
+function submitReview(){
+ if(selectedStars===0){
+  alert("اختر عدد النجوم أولاً!\nPlease select your stars!");
+  return;
+ }
+
+ const review={
+  name:document.getElementById("reviewName").value.trim() || "زائر",
+  stars:selectedStars,
+  text:document.getElementById("reviewText").value.trim(),
+  date:new Date().toLocaleDateString()
+ };
+
+ let reviews=JSON.parse(localStorage.getItem("mirReviews")||"[]");
+ reviews.push(review);
+ localStorage.setItem("mirReviews",JSON.stringify(reviews));
+
+ alert("شكراً على تقييمك! ❤️\nThank you for your review!");
+ closeReview();
+}
+
+function closeReview(){
+ document.getElementById("reviewPopup").style.display="none";
+}
+</script>
+ 
 
 <script>
 function addReview(){
