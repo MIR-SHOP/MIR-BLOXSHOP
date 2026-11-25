@@ -185,5 +185,133 @@ showFruits();
 showCart();
 </script>
   
+<style>
+.checkout{
+ background:#21172e;
+ border:1px solid #70449a;
+ border-radius:15px;
+ padding:16px;
+ margin-top:20px;
+}
+.checkout input{
+ width:100%;
+ padding:13px;
+ margin:7px 0;
+ border:1px solid #70449a;
+ border-radius:9px;
+ background:#120c1c;
+ color:white;
+}
+.payment-methods{
+ display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:9px;
+ margin:15px 0;
+}
+.pay-card{
+ background:#160f20;
+ border:2px solid #70449a;
+ border-radius:12px;
+ padding:10px 4px;
+ text-align:center;
+ cursor:pointer;
+}
+.pay-card:has(input:checked){
+ border-color:#d69aff;
+ background:#38204e;
+}
+.pay-card img{
+ width:100%;
+ height:60px;
+ object-fit:contain;
+}
+.pay-card input{width:auto}
+.pay-card span{color:white;font-size:13px}
+.order-button{
+ width:100%;
+ padding:14px;
+ border:0;
+ border-radius:10px;
+ background:#873bd1;
+ color:white;
+ font-weight:bold;
+ font-size:16px;
+}
+</style>
+
+<div class="checkout">
+ <h2>📦 إتمام الطلب | Checkout</h2>
+
+ <input id="orderRoblox" placeholder="اسم Roblox">
+ <input id="orderTikTok" placeholder="اسم TikTok">
+
+ <h3>💳 اختر طريقة الدفع</h3>
+
+ <div class="payment-methods">
+
+  <label class="pay-card">
+   <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Robux_2019_Logo_black.svg" alt="Robux">
+   <input type="radio" name="payment" value="Robux">
+   <br><span>Robux</span>
+  </label>
+
+  <label class="pay-card">
+   <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Libyana_mobile_phone_logo.png" alt="Libyana">
+   <input type="radio" name="payment" value="ليبيانا">
+   <br><span>ليبيانا</span>
+  </label>
+
+  <label class="pay-card">
+   <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Almadar_Aljadid_Logo.png" alt="Almadar">
+   <input type="radio" name="payment" value="المدار">
+   <br><span>المدار</span>
+  </label>
+
+ </div>
+
+ <button class="order-button" onclick="submitShopOrder()">
+ تأكيد الطلب | Confirm Order
+ </button>
+</div>
+
+<script>
+async function submitShopOrder(){
+ const roblox=document.getElementById("orderRoblox").value.trim();
+ const tiktok=document.getElementById("orderTikTok").value.trim();
+ const payment=document.querySelector('input[name="payment"]:checked');
+
+ if(!roblox||!tiktok||!payment){
+  alert("يرجى إدخال البيانات واختيار طريقة الدفع");
+  return;
+ }
+
+ const ids=Object.keys(cart);
+
+ if(ids.length===0){
+  alert("السلة فارغة");
+  return;
+ }
+
+ let details="";
+ ids.forEach(i=>{
+  details+=fruitNames[i][1]+" | "+fruitNames[i][0]+" × "+cart[i]+"\n";
+ });
+
+ const message=
+ "طلب جديد MIR BLOX SHOP\n"+
+ "Roblox: "+roblox+"\n"+
+ "TikTok: "+tiktok+"\n"+
+ "طريقة الدفع: "+payment.value+"\n"+
+ "الفواكه:\n"+details;
+
+ try{
+  await navigator.clipboard.writeText(message);
+  alert("تم نسخ تفاصيل الطلب بنجاح. أرسلها لإدارة المتجر للتأكيد.");
+ }catch(e){
+  alert("تعذر نسخ تفاصيل الطلب");
+ }
+}
+</script>
+  
 </body>
 </html>
