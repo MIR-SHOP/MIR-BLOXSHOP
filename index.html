@@ -2,358 +2,239 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MIR BLOX SHOP</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#0b0712;color:white;font-family:Arial,sans-serif}
-header{text-align:center;padding:28px 12px;background:linear-gradient(130deg,#30134a,#100819);border-bottom:1px solid #75449a}
-header h1{color:#dfb2ff;margin:0;font-size:30px}
-header p{color:#d8c3e8}
-.container{max-width:1150px;margin:auto;padding:18px}
-h2{color:#d9a5ff}
-.tools{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}
-.tools input,.tools select{flex:1;min-width:140px}
-input,select,textarea{width:100%;padding:12px;background:#120b1b;color:white;border:1px solid #59406b;border-radius:9px;margin:7px 0 13px}
-.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:13px}
-.product{background:#1b1225;border:1px solid #39234c;border-radius:15px;padding:12px;text-align:center}
-.product img{width:100%;height:125px;object-fit:contain;background:#100a17;border-radius:10px}
-.product h3{font-size:16px;margin:10px 0 5px}
-.price{color:#d9a5ff;font-weight:bold;margin:8px}
-.stock{font-size:13px;color:#c5b2d3}
-.out{color:#ff7777}
-button{border:0;border-radius:9px;padding:10px 13px;background:#8c43bd;color:white;font-weight:bold;cursor:pointer}
-button:disabled{opacity:.4}
-.cart-float{position:fixed;bottom:18px;left:18px;z-index:10;border-radius:30px;padding:14px 20px;box-shadow:0 4px 20px #000}
-.overlay{display:none;position:fixed;inset:0;background:#000c;z-index:20;overflow:auto;padding:15px}
-.modal{max-width:560px;margin:20px auto;background:#1b1225;border:1px solid #68418a;border-radius:17px;padding:18px}
-.close{float:left;background:#43234f}
-.cart-line{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid #453151}
-.cart-line button{padding:6px 11px}
-.total{font-size:20px;color:#d9a5ff;font-weight:bold;margin:15px 0}
-.payments{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.payments label{background:#2a1a38;border:1px solid #68418a;padding:12px 5px;text-align:center;border-radius:10px}
-.payments input{width:auto;margin:0}
-.review{background:#21172d;border-radius:12px;padding:13px;margin:10px 0}
-.stars{color:#ffc84a;font-size:20px}
-.notice{color:#c9b6d8;font-size:13px;line-height:1.7}
-footer{text-align:center;padding:25px;color:#bda9cb}
+:root{--bg:#090711;--panel:#171126;--panel2:#211735;--purple:#9b5cff;--pink:#d45cff;--text:#fff;--muted:#b9accb;--line:#392653;--green:#39d98a;--red:#ff657a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#24113e 0,#090711 48%);color:var(--text);font-family:Tahoma,Arial,sans-serif}
+header{padding:28px 16px;text-align:center;background:linear-gradient(135deg,#1b1030,#090711);border-bottom:1px solid var(--line)}
+.logo{font-size:30px;font-weight:900;color:#d6b5ff;letter-spacing:1px}.sub{color:var(--muted);margin-top:8px}
+.wrap{max-width:1150px;margin:auto;padding:18px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}
+input,select,textarea{background:#100b1b;color:#fff;border:1px solid var(--line);border-radius:10px;padding:12px;font:inherit;min-width:0}
+#search{flex:1;min-width:190px}
+button{border:0;border-radius:10px;padding:11px 15px;font:inherit;font-weight:bold;cursor:pointer;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff}
+button:disabled{opacity:.45;cursor:not-allowed}.cartTop{position:fixed;left:16px;bottom:16px;z-index:5;box-shadow:0 5px 25px #0009}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:13px}
+.card{background:linear-gradient(160deg,#211735,#120d1e);border:1px solid var(--line);border-radius:15px;padding:12px;text-align:center;min-width:0}
+.fruitImg{width:100%;height:125px;object-fit:contain;background:#0b0812;border-radius:10px;margin-bottom:8px}
+.fruitName{font-weight:800;margin:4px 0}.en{font-size:12px;color:var(--muted);direction:ltr}
+.price{color:#dfc4ff;font-weight:bold;margin:9px 0}.out{color:#ff8795;font-size:12px;margin:7px 0}
+.card button{width:100%;margin-top:7px}
+section.panel{background:#140e20;border:1px solid var(--line);border-radius:15px;padding:16px;margin:18px 0}
+.hidden{display:none!important}
+.overlay{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:14px;z-index:10}
+.modal{background:#160f23;border:1px solid #68439a;border-radius:16px;padding:18px;width:min(560px,100%);max-height:90vh;overflow:auto}
+.modal h2{margin-top:0}.close{float:left;background:#39264f;padding:7px 11px}
+.cartLine{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;border-bottom:1px solid var(--line);padding:10px 0}
+.qty{display:flex;align-items:center;gap:7px}.qty button{padding:5px 10px}
+.total{font-size:20px;font-weight:bold;color:#e0c5ff;margin:14px 0}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:9px}.fields input,.fields select,.fields textarea{width:100%}
+.full{grid-column:1/-1}small,.muted{color:var(--muted)}
+.review{border-bottom:1px solid var(--line);padding:10px 0}
+footer{text-align:center;color:var(--muted);padding:30px 12px;border-top:1px solid var(--line);margin-top:25px}
+a{color:#d9baff}
+@media(max-width:520px){.fields{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card{padding:9px}.fruitImg{height:105px}}
 </style>
 </head>
 <body>
-
 <header>
-<h1>💜 MIR BLOX SHOP</h1>
-<p>متجرك المفضل لفواكه Blox Fruits</p>
-<p>Your favorite Blox Fruits shop</p>
+ <div class="logo">MIR BLOX SHOP</div>
+ <div class="sub">متجر فواكه Blox Fruits | Blox Fruits Store</div>
 </header>
-
-<main class="container">
-<h2>🍇 الفواكه | Fruits</h2>
-<div class="tools">
-<input id="search" placeholder="ابحث عن فاكهة... Search fruit" oninput="renderProducts()">
-<select id="sort" onchange="renderProducts()">
-<option value="default">الترتيب الافتراضي</option>
-<option value="low">السعر من الأقل</option>
-<option value="high">السعر من الأعلى</option>
-</select>
-</div>
-
-<div class="products" id="products"></div>
-
-<h2>⭐ تقييمات الزبائن | Reviews</h2>
-<p class="notice">التقييمات المشتركة تظهر بعد إعداد Firebase.</p>
-<div id="reviews">جاري تحميل التقييمات...</div>
+<main class="wrap">
+ <div class="toolbar">
+  <input id="search" placeholder="ابحث عن فاكهة... Search fruit" oninput="renderProducts()">
+  <button onclick="openCart()">🛒 السلة (<span id="cartCount">0</span>)</button>
+ </div>
+ <div id="products" class="grid"></div>
+ <section class="panel">
+  <h2>⭐ تقييمات الزبائن | Customer Reviews</h2>
+  <div id="reviewsList"><p class="muted">لا توجد تقييمات بعد.</p></div>
+ </section>
 </main>
-
-<button class="cart-float" onclick="openCart()">🛒 السلة <span id="cartCount">0</span></button>
+<button class="cartTop" onclick="openCart()">🛒 السلة <span id="floatCount">0</span></button>
 
 <div class="overlay" id="cartOverlay">
-<div class="modal">
-<button class="close" onclick="closeCart()">إغلاق ✖</button>
-<h2>🛒 سلة المشتريات</h2>
-<div id="cartItems"></div>
-<div class="total" id="cartTotal">المجموع: 0 Robux</div>
-
-<h3>بيانات الطلب | Order details</h3>
-<label>اسم Roblox</label>
-<input id="robloxName" placeholder="Roblox username">
-<label>اسم TikTok</label>
-<input id="tiktokName" placeholder="TikTok username">
-
-<h3>طريقة الدفع | Payment</h3>
-<div class="payments">
-<label><input type="radio" name="payment" value="ليبيانا"> ليبيانا</label>
-<label><input type="radio" name="payment" value="المدار"> المدار</label>
-<label><input type="radio" name="payment" value="Robux"> Robux</label>
-</div>
-
-<button style="width:100%;margin-top:15px" id="orderBtn" onclick="placeOrder()">تأكيد الطلب | Confirm</button>
-<p id="orderMessage" class="notice"></p>
-</div>
+ <div class="modal">
+  <button class="close" onclick="closeCart()">إغلاق ✕</button>
+  <h2>🛒 سلة المشتريات</h2>
+  <div id="cartItems"></div>
+  <div class="total" id="cartTotal"></div>
+  <h3>إتمام الطلب | Checkout</h3>
+  <div class="fields">
+   <input id="roblox" placeholder="اسم Roblox">
+   <input id="tiktok" placeholder="اسم TikTok">
+   <select id="payment" onchange="renderCart()">
+    <option value="robux">Robux</option>
+    <option value="libyana">ليبيانا | Libyana</option>
+    <option value="madar">المدار | Almadar</option>
+   </select>
+   <div class="muted" style="align-self:center">السعر يتغير حسب طريقة الدفع</div>
+  </div>
+  <p class="muted">تأكد من اختيار طريقة الدفع الصحيحة قبل إرسال الطلب.</p>
+  <button style="width:100%" onclick="placeOrder()">تأكيد الطلب</button>
+  <p id="orderMsg" class="muted"></p>
+ </div>
 </div>
 
 <div class="overlay" id="reviewOverlay">
-<div class="modal">
-<h2>⭐ قيّم تجربتك</h2>
-<label>التقييم</label>
-<select id="rating">
-<option value="5">⭐⭐⭐⭐⭐ ممتاز</option>
-<option value="4">⭐⭐⭐⭐ جيد جداً</option>
-<option value="3">⭐⭐⭐ جيد</option>
-<option value="2">⭐⭐ سيئ</option>
-<option value="1">⭐ سيئ جداً</option>
-</select>
-<label>اكتب رأيك</label>
-<textarea id="reviewText" rows="4" maxlength="400" placeholder="اكتب تقييمك..."></textarea>
-<button style="width:100%" onclick="sendReview()">إرسال التقييم</button>
-<p id="reviewMessage" class="notice"></p>
-</div>
+ <div class="modal">
+  <h2>⭐ قيّم تجربتك</h2>
+  <select id="stars" style="width:100%;margin-bottom:10px">
+   <option value="5">⭐⭐⭐⭐⭐ ممتاز</option><option value="4">⭐⭐⭐⭐ جيد جداً</option>
+   <option value="3">⭐⭐⭐ جيد</option><option value="2">⭐⭐ سيئ</option><option value="1">⭐ سيئ جداً</option>
+  </select>
+  <textarea id="reviewText" rows="3" style="width:100%" placeholder="اكتب رأيك (ممنوع السب والإساءة)"></textarea>
+  <button onclick="saveReview()">إرسال التقييم</button>
+  <button style="background:#39264f" onclick="document.getElementById('reviewOverlay').style.display='none'">تخطي</button>
+ </div>
 </div>
 
 <footer>
-للتواصل معنا زوروا حسابنا<br>
-Contact us on our account
+ <div><b>واجهتك مشكلة؟ تواصل معنا | Need help?</b></div>
+ <p><a href="https://www.tiktok.com/@justrynianbrian1" target="_blank" rel="noopener">@justrynianbrian1</a></p>
+ <small>MIR BLOX SHOP © جميع الحقوق محفوظة</small>
 </footer>
 
-<script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import {getFirestore,collection,addDoc,getDocs,query,orderBy,serverTimestamp}
-from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+<script>
+/* =========================
+   تحكم صاحب المتجر من هنا فقط
+   عدّل الأسعار والمخزون لكل منتج.
+   الأسعار بالدينار/الرصيد حسب طريقة الدفع التي تحددها.
+   ========================= */
+const PRODUCTS = [
+ {id:"rocket",ar:"روكيت",en:"Rocket",image:"Rocket_Fruit.png",stock:20,prices:{robux:5,libyana:0,madar:0}},
+ {id:"spin",ar:"سبين",en:"Spin",image:"Spin_Fruit.png",stock:20,prices:{robux:10,libyana:0,madar:0}},
+ {id:"blade",ar:"بليد",en:"Blade",image:"Blade_Fruit.png",stock:15,prices:{robux:25,libyana:0,madar:0}},
+ {id:"spring",ar:"سبرينغ",en:"Spring",image:"Spring_Fruit.png",stock:15,prices:{robux:30,libyana:0,madar:0}},
+ {id:"bomb",ar:"بومب",en:"Bomb",image:"Bomb_Fruit.png",stock:15,prices:{robux:40,libyana:0,madar:0}},
+ {id:"smoke",ar:"سموك",en:"Smoke",image:"Smoke_Fruit.png",stock:15,prices:{robux:50,libyana:0,madar:0}},
+ {id:"spike",ar:"سبايك",en:"Spike",image:"Spike_Fruit.png",stock:12,prices:{robux:60,libyana:0,madar:0}},
+ {id:"flame",ar:"فليم",en:"Flame",image:"Flame_Fruit.png",stock:10,prices:{robux:250,libyana:0,madar:0}},
+ {id:"ice",ar:"آيس",en:"Ice",image:"Ice_Fruit.png",stock:10,prices:{robux:350,libyana:0,madar:0}},
+ {id:"sand",ar:"ساند",en:"Sand",image:"Sand_Fruit.png",stock:10,prices:{robux:0,libyana:0,madar:0}},
+ {id:"dark",ar:"دارك",en:"Dark",image:"Dark_Fruit.png",stock:10,prices:{robux:0,libyana:0,madar:0}},
+ {id:"eagle",ar:"إيغل",en:"Eagle",image:"Eagle_Fruit.png",stock:10,prices:{robux:0,libyana:0,madar:0}},
+ {id:"diamond",ar:"دايموند",en:"Diamond",image:"Diamond_Fruit.png",stock:10,prices:{robux:0,libyana:0,madar:0}},
+ {id:"light",ar:"لايت",en:"Light",image:"Light_Fruit.png",stock:8,prices:{robux:650,libyana:0,madar:0}},
+ {id:"rubber",ar:"رابر",en:"Rubber",image:"Rubber_Fruit.png",stock:8,prices:{robux:0,libyana:0,madar:0}},
+ {id:"ghost",ar:"غوست",en:"Ghost",image:"Ghost_Fruit.png",stock:8,prices:{robux:0,libyana:0,madar:0}},
+ {id:"magma",ar:"ماغما",en:"Magma",image:"Magma_Fruit.png",stock:8,prices:{robux:900,libyana:0,madar:0}},
+ {id:"quake",ar:"كويك",en:"Quake",image:"Quake_Fruit.png",stock:8,prices:{robux:0,libyana:0,madar:0}},
+ {id:"buddha",ar:"بوذا",en:"Buddha",image:"Buddha_Fruit.png",stock:5,prices:{robux:1200,libyana:0,madar:0}},
+ {id:"love",ar:"لوف",en:"Love",image:"Love_Fruit.png",stock:8,prices:{robux:0,libyana:0,madar:0}},
+ {id:"creation",ar:"كرييشن",en:"Creation",image:"Creation_Fruit.png",stock:8,prices:{robux:0,libyana:0,madar:0}},
+ {id:"spider",ar:"سبايدر",en:"Spider",image:"Spider_Fruit.png",stock:8,prices:{robux:0,libyana:0,madar:0}},
+ {id:"sound",ar:"ساوند",en:"Sound",image:"Sound_Fruit.png",stock:8,prices:{robux:0,libyana:0,madar:0}},
+ {id:"phoenix",ar:"فونيكس",en:"Phoenix",image:"Phoenix_Fruit.png",stock:8,prices:{robux:0,libyana:0,madar:0}},
+ {id:"portal",ar:"بورتال",en:"Portal",image:"Portal_Fruit.png",stock:8,prices:{robux:0,libyana:0,madar:0}},
+ {id:"lightning",ar:"لايتنينغ",en:"Lightning",image:"Lightning_Fruit.png",stock:8,prices:{robux:0,libyana:0,madar:0}},
+ {id:"pain",ar:"بين",en:"Pain",image:"Pain_Fruit.png",stock:8,prices:{robux:0,libyana:0,madar:0}},
+ {id:"blizzard",ar:"بليزارد",en:"Blizzard",image:"Blizzard_Fruit.png",stock:8,prices:{robux:0,libyana:0,madar:0}},
+ {id:"gravity",ar:"جرافيتي",en:"Gravity",image:"Gravity_Fruit.png",stock:8,prices:{robux:0,libyana:0,madar:0}},
+ {id:"mammoth",ar:"ماموث",en:"Mammoth",image:"Mammoth_Fruit.png",stock:6,prices:{robux:0,libyana:0,madar:0}},
+ {id:"trex",ar:"تي ريكس",en:"T-Rex",image:"T-Rex_Fruit.png",stock:6,prices:{robux:0,libyana:0,madar:0}},
+ {id:"dough",ar:"دو",en:"Dough",image:"Dough_Fruit.png",stock:6,prices:{robux:0,libyana:0,madar:0}},
+ {id:"shadow",ar:"شادو",en:"Shadow",image:"Shadow_Fruit.png",stock:6,prices:{robux:0,libyana:0,madar:0}},
+ {id:"venom",ar:"فينوم",en:"Venom",image:"Venom_Fruit.png",stock:6,prices:{robux:0,libyana:0,madar:0}},
+ {id:"gas",ar:"غاز",en:"Gas",image:"Gas_Fruit.png",stock:6,prices:{robux:0,libyana:0,madar:0}},
+ {id:"spirit",ar:"سبيريت",en:"Spirit",image:"Spirit_Fruit.png",stock:6,prices:{robux:0,libyana:0,madar:0}},
+ {id:"tiger",ar:"تايغر",en:"Tiger",image:"Tiger_Fruit.png",stock:6,prices:{robux:0,libyana:0,madar:0}},
+ {id:"yeti",ar:"ييتي",en:"Yeti",image:"Yeti_Fruit.png",stock:6,prices:{robux:6,libyana:0,madar:0}},
+ {id:"magnet",ar:"ماغنيت",en:"Magnet",image:"Magnet_Fruit.png",stock:6,prices:{robux:0,libyana:0,madar:0}},
+ {id:"kitsune",ar:"كيتسوني",en:"Kitsune",image:"Kitsune_Fruit.png",stock:5,prices:{robux:0,libyana:0,madar:0}},
+ {id:"control",ar:"كونترول",en:"Control",image:"Control_Fruit.png",stock:5,prices:{robux:0,libyana:0,madar:0}},
+ {id:"dragon-east",ar:"التنين الشرقي",en:"Eastern Dragon",image:"Dragon_East_Fruit.png",stock:2,prices:{robux:0,libyana:0,madar:0}},
+ {id:"dragon-west",ar:"التنين الغربي",en:"Western Dragon",image:"Dragon_West_Fruit.png",stock:2,prices:{robux:0,libyana:0,madar:0}}
+];
 
-/* إعداد Firebase: ضع بيانات مشروعك هنا */
-const firebaseConfig={
- apiKey:"ضع_API_KEY_هنا",
- authDomain:"ضع_AUTH_DOMAIN_هنا",
- projectId:"ضع_PROJECT_ID_هنا",
- storageBucket:"ضع_STORAGE_BUCKET_هنا",
- messagingSenderId:"ضع_MESSAGING_SENDER_ID_هنا",
- appId:"ضع_APP_ID_هنا"
-};
-
-let db=null;
-let firebaseReady=false;
-
-try{
- if(firebaseConfig.apiKey.startsWith("AIza") &&
- firebaseConfig.projectId!=="ضع_PROJECT_ID_هنا"){
-  db=getFirestore(initializeApp(firebaseConfig));
-  firebaseReady=true;
- }
-}catch(e){console.error(e);}
-
-/* المنتجات: السعر والمخزون قابلان للتعديل */
-const fruits=[
-["rocket","روكيت","Rocket",5,20],
-["spin","سبين","Spin",10,20],
-["blade","بليد","Blade",25,15],
-["spring","سبرينغ","Spring",30,15],
-["bomb","بومب","Bomb",40,15],
-["smoke","سموك","Smoke",50,15],
-["spike","سبايك","Spike",60,12],
-["flame","فليم","Flame",250,10],
-["ice","آيس","Ice",350,10],
-["sand","ساند","Sand",400,10],
-["dark","دارك","Dark",500,10],
-["eagle","إيغل","Eagle",550,8],
-["diamond","دايموند","Diamond",600,8],
-["light","لايت","Light",650,8],
-["rubber","رابر","Rubber",750,8],
-["ghost","غوست","Ghost",800,8],
-["magma","ماغما","Magma",900,8],
-["quake","كويك","Quake",1000,7],
-["buddha","بوذا","Buddha",1200,5],
-["love","لاف","Love",1300,7],
-["creation","كرييشن","Creation",1400,6],
-["spider","سبايدر","Spider",1500,6],
-["sound","ساوند","Sound",1700,6],
-["phoenix","فينيكس","Phoenix",1800,5],
-["portal","بورتال","Portal",1900,5],
-["lightning","لايتنينغ","Lightning",2100,5],
-["pain","بين","Pain",2300,5],
-["blizzard","بليزارد","Blizzard",2400,5],
-["gravity","جرافيتي","Gravity",2500,4],
-["mammoth","ماموث","Mammoth",2700,4],
-["trex","تي ريكس","T-Rex",2700,4],
-["dough","دو","Dough",2800,4],
-["shadow","شادو","Shadow",2900,4],
-["venom","فينوم","Venom",3000,4],
-["gas","غاز","Gas",3200,4],
-["spirit","سبيريت","Spirit",3400,4],
-["tiger","تايغر","Tiger",3500,4],
-["yeti","يتي","Yeti",3800,3],
-["magnet","ماغنيت","Magnet",4000,3],
-["kitsune","كيتسوني","Kitsune",4500,3],
-["control","كنترول","Control",4700,3],
-["dragon","دراجون","Dragon",5000,2]
-].map(f=>({
- id:f[0],name:f[1],en:f[2],price:f[3],stock:f[4],
- image:f[2].replaceAll(" ","_")+"_Fruit.png"
-}));
-
+const IMAGE_BASE="https://blox-fruits.fandom.com/wiki/Special:FilePath/";
 const cart={};
-
-function imageURL(f){
- return "https://blox-fruits.fandom.com/wiki/Special:FilePath/"+encodeURIComponent(f.image);
-}
-
-window.renderProducts=function(){
- let list=[...fruits];
- const search=document.getElementById("search").value.trim().toLowerCase();
- const sort=document.getElementById("sort").value;
-
- list=list.filter(f=>(f.name+" "+f.en).toLowerCase().includes(search));
- if(sort==="low")list.sort((a,b)=>a.price-b.price);
- if(sort==="high")list.sort((a,b)=>b.price-a.price);
-
- document.getElementById("products").innerHTML=list.map(f=>`
- <div class="product">
- <img loading="lazy" src="${imageURL(f)}" alt="${f.en}"
- onerror="this.onerror=null;this.src='https://static.wikia.nocookie.net/roblox-blox-piece/images/c/cb/Rocket_Fruit.png/revision/latest/scale-to-width-down/256?cb=20231027120039'">
- <h3>${f.name} | ${f.en}</h3>
- <div class="price">${f.price} Robux</div>
- <div class="stock ${f.stock<=0?'out':''}">
- ${f.stock<=0?'نفدت الكمية':'المخزون: '+f.stock}
- </div>
- <button onclick="addToCart('${f.id}')" ${f.stock<=0?'disabled':''}>أضف للسلة +</button>
- </div>`).join("");
-};
-
-window.addToCart=function(id){
- const f=fruits.find(x=>x.id===id);
- if(!f||f.stock<=0)return;
- if((cart[id]||0)>=f.stock){alert("الكمية المتوفرة غير كافية");return;}
- cart[id]=(cart[id]||0)+1;
- updateCart();
-};
-
-window.changeQty=function(id,n){
- const f=fruits.find(x=>x.id===id);
- const next=(cart[id]||0)+n;
- if(next<=0)delete cart[id];
- else if(next<=f.stock)cart[id]=next;
- else alert("الكمية المتوفرة غير كافية");
- updateCart();
-};
-
-function total(){
- return Object.entries(cart).reduce((s,[id,q])=>
- s+fruits.find(f=>f.id===id).price*q,0);
-}
-
-function updateCart(){
- document.getElementById("cartCount").textContent=
- Object.values(cart).reduce((a,b)=>a+b,0);
-
- const lines=Object.entries(cart).filter(x=>x[1]>0);
- document.getElementById("cartItems").innerHTML=lines.length?
- lines.map(([id,q])=>{
- const f=fruits.find(x=>x.id===id);
- return `<div class="cart-line">
- <span>${f.name} × ${q}<br>${f.price*q} Robux</span>
- <span><button onclick="changeQty('${id}',1)">+</button>
- <button onclick="changeQty('${id}',-1)">−</button></span>
- </div>`;
- }).join(""):"<p>السلة فارغة</p>";
-
- document.getElementById("cartTotal").textContent="المجموع: "+total()+" Robux";
-}
-
-window.openCart=()=>document.getElementById("cartOverlay").style.display="block";
-window.closeCart=()=>document.getElementById("cartOverlay").style.display="none";
-
-window.placeOrder=async function(){
- const msg=document.getElementById("orderMessage");
- const roblox=document.getElementById("robloxName").value.trim();
- const tiktok=document.getElementById("tiktokName").value.trim();
- const payment=document.querySelector('input[name="payment"]:checked')?.value;
- const items=Object.entries(cart).filter(x=>x[1]>0).map(([id,q])=>{
- const f=fruits.find(x=>x.id===id);
- return {id,name:f.name,englishName:f.en,quantity:q,price:f.price};
+let lastOrder=null;
+const currency={robux:"Robux",libyana:"رصيد ليبيانا",madar:"رصيد المدار"};
+function money(n){return Number(n).toLocaleString("en-US")}
+function priceOf(p){return Number(p.prices[document.getElementById("payment").value]||0)}
+function renderProducts(){
+ const q=document.getElementById("search").value.trim().toLowerCase();
+ const box=document.getElementById("products");
+ box.innerHTML="";
+ PRODUCTS.filter(p=>(p.ar+" "+p.en).toLowerCase().includes(q)).forEach(p=>{
+  const unavailable=p.stock<=0;
+  const price=priceOf(p);
+  const card=document.createElement("article");card.className="card";
+  const img=document.createElement("img");img.className="fruitImg";img.alt=p.en+" fruit";
+  img.src=IMAGE_BASE+encodeURIComponent(p.image);
+  img.onerror=()=>{img.removeAttribute("src");img.alt="الصورة غير متاحة حالياً";img.style.opacity=".35";};
+  card.appendChild(img);
+  card.insertAdjacentHTML("beforeend",`<div class="fruitName">${p.ar}</div><div class="en">${p.en}</div><div class="price">${price>0?money(price)+" "+currency[document.getElementById("payment").value]:"السعر غير محدد بعد"}</div>${unavailable?'<div class="out">نفدت الكمية</div>':''}`);
+  const b=document.createElement("button");b.textContent=unavailable?"غير متوفر":"أضف للسلة";b.disabled=unavailable||price<=0;b.onclick=()=>addToCart(p.id);card.appendChild(b);box.appendChild(card);
  });
-
- if(!items.length){msg.textContent="السلة فارغة";return;}
- if(!roblox||!tiktok){msg.textContent="اكتب اسم Roblox وTikTok";return;}
- if(!payment){msg.textContent="اختار طريقة الدفع";return;}
- if(!firebaseReady){msg.textContent="أضف بيانات Firebase أولاً لحفظ الطلب.";return;}
-
- const btn=document.getElementById("orderBtn");
- btn.disabled=true;
- msg.textContent="جاري إرسال الطلب...";
-
- try{
-  await addDoc(collection(db,"orders"),{
-   roblox,tiktok,payment,items,total:total(),
-   status:"new",createdAt:serverTimestamp()
-  });
-  items.forEach(item=>{
-   const f=fruits.find(x=>x.id===item.id);
-   f.stock=Math.max(0,f.stock-item.quantity);
-  });
-  Object.keys(cart).forEach(k=>delete cart[k]);
-  updateCart();
-  renderProducts();
-  msg.textContent="تم حفظ طلبك بنجاح 💜";
-  document.getElementById("reviewOverlay").style.display="block";
- }catch(e){
-  console.error(e);
-  msg.textContent="تعذر حفظ الطلب. راجع إعدادات Firebase.";
- }finally{btn.disabled=false;}
-};
-
-window.sendReview=async function(){
- const msg=document.getElementById("reviewMessage");
- const review=document.getElementById("reviewText").value.trim();
- const rating=Number(document.getElementById("rating").value);
- if(!review){msg.textContent="اكتب تقييمك أولاً";return;}
- if(!firebaseReady){msg.textContent="أضف بيانات Firebase أولاً.";return;}
-
- try{
-  await addDoc(collection(db,"reviews"),{
-   rating,review,createdAt:serverTimestamp()
-  });
-  msg.textContent="تم إرسال تقييمك 💜";
-  document.getElementById("reviewText").value="";
-  await loadReviews();
-  setTimeout(()=>document.getElementById("reviewOverlay").style.display="none",1200);
- }catch(e){
-  console.error(e);
-  msg.textContent="تعذر إرسال التقييم.";
- }
-};
-
-async function loadReviews(){
- const area=document.getElementById("reviews");
- if(!firebaseReady){
-  area.textContent="التقييمات المشتركة تحتاج إعداد Firebase.";
-  return;
- }
- try{
-  const q=query(collection(db,"reviews"),orderBy("createdAt","desc"));
-  const data=await getDocs(q);
-  if(data.empty){area.textContent="لا توجد تقييمات بعد.";return;}
-  area.innerHTML="";
-  data.forEach(d=>{
-   const r=d.data();
-   const card=document.createElement("div");
-   card.className="review";
-   const stars=document.createElement("div");
-   stars.className="stars";
-   stars.textContent="★".repeat(Math.max(1,Math.min(5,Number(r.rating)||1)));
-   const comment=document.createElement("p");
-   comment.textContent=r.review||"";
-   card.append(stars,comment);
-   area.append(card);
-  });
- }catch(e){
-  console.error(e);
-  area.textContent="تعذر تحميل التقييمات.";
- }
 }
-
-renderProducts();
-updateCart();
-loadReviews();
+function addToCart(id){
+ const p=PRODUCTS.find(x=>x.id===id);const wanted=(cart[id]||0)+1;
+ if(wanted>p.stock){alert("الكمية المطلوبة غير متوفرة");return}
+ cart[id]=wanted;updateCartCount();alert("تمت الإضافة للسلة");
+}
+function updateCartCount(){const n=Object.values(cart).reduce((a,b)=>a+b,0);document.getElementById("cartCount").textContent=n;document.getElementById("floatCount").textContent=n}
+function openCart(){document.getElementById("cartOverlay").style.display="flex";renderCart()}
+function closeCart(){document.getElementById("cartOverlay").style.display="none"}
+function changeQty(id,delta){
+ const p=PRODUCTS.find(x=>x.id===id),next=(cart[id]||0)+delta;
+ if(next>p.stock){alert("الكمية المطلوبة غير متوفرة");return}
+ if(next<=0)delete cart[id];else cart[id]=next;
+ updateCartCount();renderCart();
+}
+function renderCart(){
+ const area=document.getElementById("cartItems"),pay=document.getElementById("payment").value;
+ area.innerHTML="";let total=0;
+ Object.entries(cart).forEach(([id,qty])=>{
+  const p=PRODUCTS.find(x=>x.id===id),price=Number(p.prices[pay]||0);total+=price*qty;
+  const line=document.createElement("div");line.className="cartLine";
+  line.innerHTML=`<div><b>${p.ar}</b><div class="en">${p.en}</div><small>${money(price)} ${currency[pay]} × ${qty}</small></div><div class="qty"><button onclick="changeQty('${id}',-1)">−</button><b>${qty}</b><button onclick="changeQty('${id}',1)">+</button></div><button style="background:#59314b" onclick="removeItem('${id}')">حذف</button>`;
+  area.appendChild(line);
+ });
+ document.getElementById("cartTotal").textContent="الإجمالي: "+money(total)+" "+currency[pay];
+ if(!Object.keys(cart).length)area.innerHTML='<p class="muted">السلة فارغة</p>';
+}
+function removeItem(id){delete cart[id];updateCartCount();renderCart()}
+async function placeOrder(){
+ const roblox=document.getElementById("roblox").value.trim(),tiktok=document.getElementById("tiktok").value.trim(),pay=document.getElementById("payment").value;
+ if(!roblox||!tiktok){alert("اكتب اسم Roblox وTikTok");return}
+ if(!Object.keys(cart).length){alert("السلة فارغة");return}
+ for(const [id,qty] of Object.entries(cart)){const p=PRODUCTS.find(x=>x.id===id);if(qty>p.stock){alert("الكمية المطلوبة غير متوفرة: "+p.ar);return}}
+ const lines=Object.entries(cart).map(([id,qty])=>{const p=PRODUCTS.find(x=>x.id===id);return `${p.en} x${qty} = ${money(p.prices[pay]*qty)} ${currency[pay]}`});
+ const total=Object.entries(cart).reduce((s,[id,q])=>s+PRODUCTS.find(p=>p.id===id).prices[pay]*q,0);
+ lastOrder={roblox,tiktok,payment:currency[pay],items:lines,total};
+ const msg=`طلب جديد من MIR BLOX SHOP\nRoblox: ${roblox}\nTikTok: ${tiktok}\nطريقة الدفع: ${currency[pay]}\n${lines.join("\n")}\nالإجمالي: ${total}`;
+ document.getElementById("orderMsg").textContent="جاري إرسال الطلب...";
+ try{
+  const response=await fetch("https://formsubmit.co/ajax/mohmidalrayani@gmail.com",{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({_subject:"طلب جديد - MIR BLOX SHOP",message:msg,_captcha:"false"})});
+  if(!response.ok)throw new Error("send failed");
+  // المخزون هنا محلي على جهاز المتصفح فقط، وليس مشتركاً بين الزبائن.
+  Object.entries(cart).forEach(([id,q])=>{PRODUCTS.find(p=>p.id===id).stock-=q});
+  Object.keys(cart).forEach(id=>delete cart[id]);updateCartCount();closeCart();
+  document.getElementById("orderMsg").textContent="";
+  document.getElementById("reviewOverlay").style.display="flex";
+  alert("تم إرسال الطلب. إذا كانت هذه أول مرة تستخدم FormSubmit، قد تحتاج لتأكيد رسالة التفعيل في البريد.");
+ }catch(e){document.getElementById("orderMsg").textContent="تعذر إرسال الطلب حالياً. حاول مرة أخرى أو تواصل معنا على TikTok."}
+}
+function saveReview(){
+ const text=document.getElementById("reviewText").value.trim(),stars=document.getElementById("stars").value;
+ if(!text){alert("اكتب تقييمك أو اضغط تخطي");return}
+ const arr=JSON.parse(localStorage.getItem("mir_reviews")||"[]");
+ arr.unshift({text,stars,date:new Date().toLocaleDateString("ar")});
+ localStorage.setItem("mir_reviews",JSON.stringify(arr.slice(0,40)));
+ document.getElementById("reviewText").value="";
+ document.getElementById("reviewOverlay").style.display="none";renderReviews();
+}
+function renderReviews(){
+ const arr=JSON.parse(localStorage.getItem("mir_reviews")||"[]"),box=document.getElementById("reviewsList");
+ box.innerHTML=arr.length?arr.map(r=>`<div class="review"><div>${"⭐".repeat(Number(r.stars))}</div><div>${escapeHTML(r.text)}</div><small>${r.date}</small></div>`).join(""):'<p class="muted">لا توجد تقييمات بعد.</p>';
+}
+function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+document.getElementById("payment").addEventListener("change",()=>{renderProducts();renderCart()});
+renderProducts();renderReviews();updateCartCount();
 </script>
 </body>
-                         </html>
+</html>
