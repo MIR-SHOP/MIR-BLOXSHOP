@@ -335,6 +335,208 @@ renderProducts();
 
 </script>
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MIR BLOX SHOP</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#090610;color:white;font-family:Arial}
+header{background:linear-gradient(120deg,#160b27,#55218c);padding:24px;text-align:center;border-bottom:2px solid #a35be9}
+header h1{color:#ddbaff;margin:0}
+nav{display:flex;justify-content:center;gap:10px;padding:14px;flex-wrap:wrap}
+button{cursor:pointer}
+nav button{background:#261535;color:white;border:1px solid #8243b9;border-radius:12px;padding:12px}
+.hero{text-align:center;padding:25px}
+.hero h2{color:#c995ff}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:14px;padding:15px;max-width:1000px;margin:auto}
+.product{background:#191020;border:1px solid #492760;border-radius:15px;padding:12px;text-align:center}
+.product img{width:100%;height:115px;object-fit:contain}
+.product h3{color:#d7aaff}
+.product p{font-size:13px;color:#ddd}
+.add{background:#783bb0;color:white;border:0;border-radius:9px;padding:11px;width:100%}
+.cart-button{position:fixed;bottom:18px;left:18px;background:#8a42d0;color:white;border:0;border-radius:30px;padding:15px 22px;z-index:5;font-weight:bold}
+.overlay{display:none;position:fixed;inset:0;background:#000b;z-index:10;justify-content:center;align-items:center;padding:12px}
+.modal{background:#171020;border:1px solid #8144b4;border-radius:18px;padding:20px;width:100%;max-width:480px;max-height:90vh;overflow:auto}
+.modal h2{text-align:center;color:#d5a2ff;margin-top:0}
+.close{float:left;background:#512b70;color:white;border:0;border-radius:8px;padding:8px 12px}
+.cart-item{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#281a35;padding:10px;margin:8px 0;border-radius:10px}
+.qty{display:flex;align-items:center;gap:8px}
+.qty button{background:#7439a9;color:white;border:0;border-radius:7px;padding:7px 11px}
+input{width:100%;padding:13px;margin:7px 0 13px;background:#281a35;border:1px solid #69418b;border-radius:9px;color:white}
+.payments{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.payment{background:#281a35;border:2px solid #563773;border-radius:10px;padding:12px 4px;text-align:center;cursor:pointer;font-size:13px}
+.payment.selected{border-color:#ce91ff;background:#493064}
+.confirm{width:100%;background:#843dc5;color:white;border:0;border-radius:10px;padding:14px;margin-top:12px;font-weight:bold}
+.total{text-align:center;color:#d7aaff;font-size:19px}
+footer{text-align:center;background:#160d21;padding:25px;margin-top:40px;color:#c8b5dd}
+</style>
+</head>
+<body>
+
+<header>
+<h1>💜 MIR BLOX SHOP</h1>
+<p>متجرك الأول لفواكه Blox Fruits</p>
+<p>Your Blox Fruits Store</p>
+</header>
+
+<nav>
+<button onclick="home()">الرئيسية / Home</button>
+<button onclick="fruitsSection()">الفواكه / Fruits</button>
+<button onclick="openCart()">🛒 السلة</button>
+</nav>
+
+<section class="hero" id="home">
+<h2>مرحباً بك في MIR BLOX SHOP</h2>
+<p>اختار فواكهك المفضلة وجهّز طلبك بسهولة</p>
+<p>Choose your favorite fruits!</p>
+</section>
+
+<h2 style="text-align:center;color:#d4a5ff" id="fruitTitle">🍇 الفواكه / FRUITS</h2>
+<section class="products" id="products"></section>
+
+<button class="cart-button" onclick="openCart()">🛒 السلة / CART (<span id="count">0</span>)</button>
+
+<div class="overlay" id="cartOverlay">
+<div class="modal">
+<button class="close" onclick="closeCart()">✕</button>
+<h2>🛒 سلة المشتريات</h2>
+<div id="cartItems"></div>
+<p class="total" id="total">الإجمالي: 0 Robux</p>
+
+<h3>بيانات الطلب / Order Details</h3>
+<label>اسم Roblox / Roblox Username</label>
+<input id="roblox" placeholder="اكتب اسم Roblox">
+
+<label>اسم TikTok / TikTok Username</label>
+<input id="tiktok" placeholder="اكتب اسم TikTok">
+
+<h3>💳 طريقة الدفع / Payment</h3>
+<div class="payments">
+<div class="payment" onclick="choosePay('ليبيانا / Libyana',this)">📱<br>ليبيانا<br>Libyana</div>
+<div class="payment" onclick="choosePay('Robux',this)">💎<br>Robux</div>
+<div class="payment" onclick="choosePay('المدار الجديد / Almadar',this)">📱<br>المدار<br>Almadar</div>
+</div>
+
+<button class="confirm" onclick="placeOrder()">تأكيد الطلب / Confirm Order</button>
+</div>
+</div>
+
+<footer>
+<h3>💜 MIR BLOX SHOP</h3>
+<p>لأي مشكلة تواصل معنا على حسابنا</p>
+<p>For any problem, contact us on our account</p>
+</footer>
+
+<script>
+const fruits=[
+["Rocket","فاكهة الصاروخ",5,"https://blox-fruits.fandom.com/wiki/Special:FilePath/Rocket_Fruit.png"],
+["Spin","فاكهة الدوران",10,"https://blox-fruits.fandom.com/wiki/Special:FilePath/Spin_Fruit.png"],
+["Blade","فاكهة الشفرة",15,"https://blox-fruits.fandom.com/wiki/Special:FilePath/Blade_Fruit.png"],
+["Spring","فاكهة النابض",20,"https://blox-fruits.fandom.com/wiki/Special:FilePath/Spring_Fruit.png"],
+["Bomb","فاكهة القنبلة",25,"https://blox-fruits.fandom.com/wiki/Special:FilePath/Bomb_Fruit.png"],
+["Smoke","فاكهة الدخان",30,"https://blox-fruits.fandom.com/wiki/Special:FilePath/Smoke_Fruit.png"],
+["Flame","فاكهة اللهب",40,"https://blox-fruits.fandom.com/wiki/Special:FilePath/Flame_Fruit.png"],
+["Ice","فاكهة الجليد",45,"https://blox-fruits.fandom.com/wiki/Special:FilePath/Ice_Fruit.png"],
+["Sand","فاكهة الرمل",50,"https://blox-fruits.fandom.com/wiki/Special:FilePath/Sand_Fruit.png"],
+["Dark","فاكهة الظلام",60,"https://blox-fruits.fandom.com/wiki/Special:FilePath/Dark_Fruit.png"],
+["Light","فاكهة الضوء",70,"https://blox-fruits.fandom.com/wiki/Special:FilePath/Light_Fruit.png"],
+["Magma","فاكهة الحمم",80,"https://blox-fruits.fandom.com/wiki/Special:FilePath/Magma_Fruit.png"]
+];
+
+let cart={};
+let payment="";
+
+function render(){
+ const area=document.getElementById("products");
+ area.innerHTML=fruits.map((f,i)=>`
+ <div class="product">
+ <img src="${f[3]}" alt="${f[0]}" onerror="this.alt='${f[0]}'">
+ <h3>${f[0]}</h3>
+ <p>${f[1]}</p>
+ <p>💎 ${f[2]} Robux</p>
+ <button class="add" onclick="add(${i})">إضافة للسلة / Add</button>
+ </div>`).join("");
+}
+
+function add(i){
+ const name=fruits[i][0];
+ cart[name]=(cart[name]||0)+1;
+ update();
+ alert("تمت الإضافة للسلة / Added to cart!");
+}
+
+function update(){
+ let count=Object.values(cart).reduce((a,b)=>a+b,0);
+ document.getElementById("count").textContent=count;
+ let html="";
+ let total=0;
+ for(let name in cart){
+  let f=fruits.find(x=>x[0]===name);
+  let q=cart[name];
+  total+=f[2]*q;
+  html+=`<div class="cart-item">
+  <div><b>${name}</b><br>${f[2]} Robux × ${q}</div>
+  <div class="qty">
+  <button onclick="change('${name}',1)">+</button>
+  ${q}
+  <button onclick="change('${name}',-1)">−</button>
+  </div></div>`;
+ }
+ document.getElementById("cartItems").innerHTML=html||"السلة فارغة / Empty cart";
+ document.getElementById("total").textContent="الإجمالي: "+total+" Robux";
+}
+
+function change(name,n){
+ cart[name]+=n;
+ if(cart[name]<=0)delete cart[name];
+ update();
+}
+
+function openCart(){
+ document.getElementById("cartOverlay").style.display="flex";
+ update();
+}
+function closeCart(){
+ document.getElementById("cartOverlay").style.display="none";
+}
+function choosePay(name,el){
+ payment=name;
+ document.querySelectorAll(".payment").forEach(x=>x.classList.remove("selected"));
+ el.classList.add("selected");
+}
+
+function placeOrder(){
+ const roblox=document.getElementById("roblox").value.trim();
+ const tiktok=document.getElementById("tiktok").value.trim();
+ if(Object.keys(cart).length===0){
+  alert("السلة فارغة / Your cart is empty");
+  return;
+ }
+ if(!roblox||!tiktok){
+  alert("اكتب اسم Roblox وTikTok / Enter both usernames");
+  return;
+ }
+ if(!payment){
+  alert("اختر طريقة الدفع / Choose payment method");
+  return;
+ }
+ alert("تم تجهيز طلبك بنجاح!\nYour order is ready!\nطريقة الدفع: "+payment+"\nسيتم ربط إرسال الطلب في الجزء القادم.");
+}
+function home(){
+ document.getElementById("home").scrollIntoView({behavior:"smooth"});
+}
+function fruitsSection(){
+ document.getElementById("fruitTitle").scrollIntoView({behavior:"smooth"});
+}
+render();
+update();
+</script>
+</body>
+ </html>
+ 
 </body>
   </html>
   
