@@ -83,9 +83,16 @@ input,textarea{width:100%;padding:12px;margin:7px 0;background:#21172e;color:whi
 <div id="products"></div>
 
 <div class="panel" id="cartPanel">
-<h2>🛒 سلة المشتريات</h2>
-<div id="cartItems">السلة فارغة</div>
-<h3>المجموع: <span id="total">0</span></h3>
+  <h2>🛒 سلة المشتريات | Cart</h2>
+
+  <div id="cartItems">السلة فارغة</div>
+
+  <h3>المجموع: <span id="total">0</span></h3>
+
+  <button class="order-button"
+    onclick="document.querySelector('.checkout').scrollIntoView({behavior:'smooth'})">
+    إكمال الطلب | Continue
+  </button>
 </div>
 
 <script>
