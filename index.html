@@ -1,1 +1,340 @@
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIR BLOX SHOP</title>
+
+<style>
+*{
+ box-sizing:border-box;
+}
+body{
+ margin:0;
+ background:#090610;
+ color:white;
+ font-family:Arial,sans-serif;
+}
+header{
+ background:linear-gradient(120deg,#170b28,#54218b);
+ padding:25px 15px;
+ text-align:center;
+ border-bottom:2px solid #9d55e8;
+}
+header h1{
+ color:#d6aaff;
+ margin:0;
+ font-size:27px;
+}
+header p{
+ color:#e4d7f4;
+}
+.nav{
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ flex-wrap:wrap;
+ gap:10px;
+ padding:14px;
+}
+.nav button{
+ background:#241432;
+ color:white;
+ border:1px solid #8243b9;
+ border-radius:12px;
+ padding:12px 18px;
+ cursor:pointer;
+}
+.hero{
+ text-align:center;
+ padding:30px 12px;
+}
+.hero h2{
+ color:#c58aff;
+}
+.hero p{
+ color:#c5b6d5;
+}
+.section-title{
+ text-align:center;
+ color:#d4a5ff;
+ margin:20px 0;
+}
+.products{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+ gap:14px;
+ padding:15px;
+ max-width:1000px;
+ margin:auto;
+}
+.product{
+ background:#171020;
+ border:1px solid #43245e;
+ border-radius:16px;
+ padding:12px;
+ text-align:center;
+ transition:.2s;
+}
+.product:hover{
+ border-color:#bb80f5;
+ transform:translateY(-3px);
+}
+.product img{
+ width:100%;
+ height:120px;
+ object-fit:contain;
+}
+.product h3{
+ color:#d6aaff;
+ margin:8px 0;
+}
+.product p{
+ color:#ddd;
+ font-size:13px;
+}
+.product button{
+ background:#7439a9;
+ border:0;
+ border-radius:9px;
+ color:white;
+ padding:11px;
+ width:100%;
+ cursor:pointer;
+}
+.product button:hover{
+ background:#9853d4;
+}
+.cart-button{
+ position:fixed;
+ bottom:20px;
+ left:20px;
+ background:#843dcc;
+ color:white;
+ border:0;
+ border-radius:50px;
+ padding:15px 22px;
+ font-weight:bold;
+ z-index:5;
+ cursor:pointer;
+}
+footer{
+ margin-top:40px;
+ padding:25px;
+ background:#160d21;
+ text-align:center;
+ color:#c8b5dd;
+ border-top:1px solid #543276;
+}
+footer a{
+ color:#d4a5ff;
+ text-decoration:none;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>💜 MIR BLOX SHOP</h1>
+<p>متجرك الأول لفواكه Blox Fruits</p>
+<p>Your Blox Fruits Store</p>
+</header>
+
+<div class="nav">
+<button onclick="goHome()">الرئيسية / Home</button>
+<button onclick="goProducts()">الفواكه / Fruits</button>
+<button onclick="openCart()">🛒 السلة / Cart</button>
+</div>
+
+<section class="hero" id="home">
+<h2>مرحباً بك في MIR BLOX SHOP</h2>
+<p>اختار فواكهك المفضلة وجهّز طلبك بسهولة!</p>
+<p>Choose your favorite fruits and order easily!</p>
+</section>
+
+<h2 class="section-title" id="fruitTitle">
+🍇 فواكه بلوكس فروت / Blox Fruits
+</h2>
+
+<main>
+<section class="products" id="products"></section>
+</main>
+
+<button class="cart-button" onclick="openCart()">
+🛒 السلة / CART (<span id="cartCount">0</span>)
+</button>
+
+<footer>
+<h3>💜 MIR BLOX SHOP</h3>
+<p>لأي مشكلة تواصل معنا على حسابنا</p>
+<p>For any problem, contact us on our account</p>
+<p>شكراً لثقتكم بنا ❤️</p>
+</footer>
+
+<script>
+
+const fruits=[
+ {
+  name:"Rocket",
+  ar:"فاكهة الصاروخ",
+  price:5,
+  img:"https://blox-fruits.fandom.com/wiki/Special:FilePath/Rocket_Fruit.png"
+ },
+ {
+  name:"Spin",
+  ar:"فاكهة الدوران",
+  price:10,
+  img:"https://blox-fruits.fandom.com/wiki/Special:FilePath/Spin_Fruit.png"
+ },
+ {
+  name:"Blade",
+  ar:"فاكهة الشفرة",
+  price:15,
+  img:"https://blox-fruits.fandom.com/wiki/Special:FilePath/Blade_Fruit.png"
+ },
+ {
+  name:"Spring",
+  ar:"فاكهة النابض",
+  price:20,
+  img:"https://blox-fruits.fandom.com/wiki/Special:FilePath/Spring_Fruit.png"
+ },
+ {
+  name:"Bomb",
+  ar:"فاكهة القنبلة",
+  price:25,
+  img:"https://blox-fruits.fandom.com/wiki/Special:FilePath/Bomb_Fruit.png"
+ },
+ {
+  name:"Smoke",
+  ar:"فاكهة الدخان",
+  price:30,
+  img:"https://blox-fruits.fandom.com/wiki/Special:FilePath/Smoke_Fruit.png"
+ },
+ {
+  name:"Flame",
+  ar:"فاكهة اللهب",
+  price:40,
+  img:"https://blox-fruits.fandom.com/wiki/Special:FilePath/Flame_Fruit.png"
+ },
+ {
+  name:"Ice",
+  ar:"فاكهة الجليد",
+  price:45,
+  img:"https://blox-fruits.fandom.com/wiki/Special:FilePath/Ice_Fruit.png"
+ },
+ {
+  name:"Sand",
+  ar:"فاكهة الرمل",
+  price:50,
+  img:"https://blox-fruits.fandom.com/wiki/Special:FilePath/Sand_Fruit.png"
+ },
+ {
+  name:"Dark",
+  ar:"فاكهة الظلام",
+  price:60,
+  img:"https://blox-fruits.fandom.com/wiki/Special:FilePath/Dark_Fruit.png"
+ },
+ {
+  name:"Light",
+  ar:"فاكهة الضوء",
+  price:70,
+  img:"https://blox-fruits.fandom.com/wiki/Special:FilePath/Light_Fruit.png"
+ },
+ {
+  name:"Magma",
+  ar:"فاكهة الحمم",
+  price:80,
+  img:"https://blox-fruits.fandom.com/wiki/Special:FilePath/Magma_Fruit.png"
+ }
+];
+
+let cart={};
+
+function renderProducts(){
+
+ const area=document.getElementById("products");
+
+ area.innerHTML="";
+
+ fruits.forEach((f,i)=>{
+
+  area.innerHTML+=`
+  <div class="product">
+
+   <img src="${f.img}"
+   alt="${f.name}"
+   onerror="this.alt='${f.name}'">
+
+   <h3>${f.name}</h3>
+
+   <p>${f.ar}</p>
+
+   <p>💎 ${f.price} Robux</p>
+
+   <button onclick="addCart(${i})">
+   إضافة للسلة / Add to cart
+   </button>
+
+  </div>
+  `;
+
+ });
+
+}
+
+function addCart(i){
+
+ const id=fruits[i].name;
+
+ cart[id]=(cart[id]||0)+1;
+
+ updateCart();
+
+ alert(
+ "تمت إضافة الفاكهة للسلة بنجاح!\n"+
+ "Fruit added to cart successfully!"
+ );
+
+}
+
+function updateCart(){
+
+ const count=Object.values(cart)
+ .reduce((a,b)=>a+b,0);
+
+ document.getElementById("cartCount").textContent=count;
+
+}
+
+function openCart(){
+
+ alert(
+ "السلة سيتم تجهيزها في الجزء القادم.\n"+
+ "Your shopping cart will be added in the next part."
+ );
+
+}
+
+function goHome(){
+
+ document.getElementById("home")
+ .scrollIntoView({behavior:"smooth"});
+
+}
+
+function goProducts(){
+
+ document.getElementById("fruitTitle")
+ .scrollIntoView({behavior:"smooth"});
+
+}
+
+renderProducts();
+
+</script>
+
+</body>
+  </html>
+  
