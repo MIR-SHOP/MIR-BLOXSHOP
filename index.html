@@ -261,5 +261,93 @@ renderCart();
 </body>
 </html>
 
+<script>
+async function placeOrder(){
+
+ const roblox=document.getElementById("robloxName").value.trim();
+ const tiktok=document.getElementById("tiktokName").value.trim();
+ const payment=document.getElementById("payment").value;
+
+ if(!roblox || !tiktok){
+  alert("اكتب اسم Roblox وTikTok أولاً");
+  return;
+ }
+
+ if(Object.keys(cart).length===0){
+  alert("السلة فارغة!");
+  return;
+ }
+
+ let total=0;
+ let orderDetails="";
+
+ for(const id in cart){
+  const f=fruits.find(x=>x.id==id);
+  const qty=cart[id].qty;
+  const price=payment==="robux"?f.robux:f.lyd;
+
+  if(qty>f.stock){
+   alert("الكمية غير متوفرة: "+f.name);
+   return;
+  }
+
+  total+=price*qty;
+  orderDetails+=f.name+" ("+f.ar+") × "+qty+
+  " = "+(price*qty)+"\n";
+ }
+
+ const currency=payment==="robux"?"Robux":"دينار ليبي";
+
+ const message=
+ "🛒 طلب جديد - MIR BLOX SHOP\n\n"+
+ "Roblox: "+roblox+"\n"+
+ "TikTok: "+tiktok+"\n"+
+ "طريقة الدفع: "+currency+"\n\n"+
+ "الفواكه:\n"+orderDetails+
+ "\nالإجمالي: "+total+" "+currency;
+
+ try{
+  const response=await fetch(
+   "https://formsubmit.co/ajax/mohmidalrayani@gmail.com",
+   {
+    method:"POST",
+    headers:{
+     "Content-Type":"application/json",
+     "Accept":"application/json"
+    },
+    body:JSON.stringify({
+     _subject:"طلب جديد من MIR BLOX SHOP",
+     message:message
+    })
+   }
+  );
+
+  const result=await response.json();
+
+  if(!response.ok || result.success===false){
+   throw new Error("تعذر الإرسال");
+  }
+
+  alert("✅ تم إرسال طلبك بنجاح!");
+
+  for(const id in cart){
+   const f=fruits.find(x=>x.id==id);
+   f.stock-=cart[id].qty;
+  }
+
+  cart={};
+  renderProducts();
+  renderCart();
+
+  document.getElementById("reviewPanel").style.display="block";
+
+ }catch(error){
+  alert("تعذر إرسال الطلب. حاول مرة أخرى.");
+ }
+}
+</script>
+</body>
+</html>
+
 </body>
 </html>
