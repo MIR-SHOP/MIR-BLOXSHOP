@@ -244,6 +244,60 @@ renderProducts();
 renderCart();
 </script>
  
+<div class="panel">
+ <h2>📦 تأكيد الطلب</h2>
+
+ <input id="robloxName"
+ placeholder="اكتب اسمك في Roblox">
+
+ <input id="tiktokName"
+ placeholder="اكتب اسمك في TikTok">
+
+ <button onclick="placeOrder()">
+ تأكيد الطلب
+ </button>
+
+ <p>بعد تأكيد الطلب تواصل معنا عبر تيك توك.</p>
+</div>
+
+<script>
+function placeOrder(){
+ const roblox=document.getElementById("robloxName").value.trim();
+ const tiktok=document.getElementById("tiktokName").value.trim();
+
+ if(!roblox || !tiktok){
+  alert("اكتب اسم Roblox وTikTok أولاً");
+  return;
+ }
+
+ if(Object.keys(cart).length===0){
+  alert("السلة فارغة!");
+  return;
+ }
+
+ let message="طلب جديد من MIR BLOX SHOP\n";
+ message+="Roblox: "+roblox+"\n";
+ message+="TikTok: "+tiktok+"\n\n";
+
+ let total=0;
+
+ Object.keys(cart).forEach(id=>{
+  const f=fruits[Number(id)];
+  const count=cart[id];
+  message+=f[0]+" × "+count+"\n";
+  total+=f[3]*count;
+ });
+
+ message+="\nالمجموع: "+total+" Robux";
+
+ const url="https://www.tiktok.com/@justrynianbrian1";
+
+ alert("تم تجهيز طلبك! تواصل معنا عبر حساب المتجر لإرساله.");
+
+ window.open(url,"_blank");
+}
+</script>
+ 
 </body>
   </html>
 
