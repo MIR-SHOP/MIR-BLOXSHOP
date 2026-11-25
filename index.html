@@ -349,5 +349,114 @@ async function placeOrder(){
 </body>
 </html>
 
+<script>
+let selectedRating=0;
+
+function setRating(value){
+
+ selectedRating=value;
+
+ document.getElementById("rating").value=value;
+
+ const stars=document.querySelectorAll("#starRating span");
+
+ stars.forEach((star,index)=>{
+  star.textContent=index<value?"★":"☆";
+  star.style.color=index<value?"#ffc107":"#aaa";
+ });
+
+ document.getElementById("ratingText").textContent=
+ "تقييمك: "+value+" من 5 نجوم ⭐";
+}
+
+function sendReview(){
+
+ const rating=selectedRating;
+ const comment=document.getElementById("reviewText").value.trim();
+
+ if(rating===0){
+  alert("اختار عدد النجوم أولاً!");
+  return;
+ }
+
+ if(!comment){
+  alert("اكتب رأيك في المتجر!");
+  return;
+ }
+
+ const review={
+  rating:rating,
+  comment:comment,
+  date:new Date().toLocaleDateString("ar")
+ };
+
+ let reviews=JSON.parse(
+  localStorage.getItem("mirReviews")||"[]"
+ );
+
+ reviews.unshift(review);
+
+ localStorage.setItem(
+  "mirReviews",
+  JSON.stringify(reviews)
+ );
+
+ document.getElementById("reviewText").value="";
+ document.getElementById("reviewPanel").style.display="none";
+
+ selectedRating=0;
+ setRating(0);
+
+ renderReviews();
+
+ alert("⭐ شكراً على تقييمك لمتجر MIR BLOX SHOP!");
+}
+
+function skipReview(){
+ document.getElementById("reviewPanel").style.display="none";
+}
+
+function renderReviews(){
+
+ const box=document.getElementById("reviewsList");
+
+ const reviews=JSON.parse(
+  localStorage.getItem("mirReviews")||"[]"
+ );
+
+ if(reviews.length===0){
+  box.innerHTML="<p>لا توجد آراء حتى الآن ❤️</p>";
+  return;
+ }
+
+ box.innerHTML="";
+
+ reviews.forEach(r=>{
+
+  const item=document.createElement("div");
+  item.className="reviews";
+
+  const stars="⭐".repeat(Number(r.rating));
+
+  const title=document.createElement("b");
+  title.textContent=stars;
+
+  const comment=document.createElement("p");
+  comment.textContent=r.comment;
+
+  const date=document.createElement("small");
+  date.textContent=r.date;
+
+  item.append(title,comment,date);
+  box.appendChild(item);
+
+ });
+}
+
+renderReviews();
+</script>
+</body>
+</html>
+
 </body>
 </html>
