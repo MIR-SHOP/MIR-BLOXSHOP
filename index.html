@@ -149,7 +149,13 @@ const PRODUCTS = [
  {id:"dragon-west",ar:"التنين الغربي",en:"Western Dragon",image:"Dragon_West_Fruit.png",stock:2,prices:{robux:0,libyana:0,madar:0}}
 ];
 
-const IMAGE_BASE="https://blox-fruits.fandom.com/wiki/Special:FilePath/";
+// صور مباشرة مختلفة لكل فاكهة من FruityBlox
+const IMAGE_BASE="https://fruityblox.com/images/fruits/";
+const IMAGE_SLUGS={
+ rocket:"rocket",spin:"spin",blade:"blade",spring:"spring",bomb:"bomb",smoke:"smoke",spike:"spike",flame:"flame",ice:"ice",sand:"sand",dark:"dark",eagle:"eagle",diamond:"diamond",light:"light",rubber:"rubber",ghost:"ghost",magma:"magma",quake:"quake",buddha:"buddha",love:"love",creation:"creation",spider:"spider",sound:"sound",phoenix:"phoenix",portal:"portal",lightning:"lightning",pain:"pain",blizzard:"blizzard",gravity:"gravity",mammoth:"mammoth",trex:"t-rex",dough:"dough",shadow:"shadow",venom:"venom",gas:"gas",spirit:"spirit",tiger:"tiger",yeti:"yeti",magnet:"magnet",kitsune:"kitsune",control:"control",
+ // Dragon has one known icon on the image host; both variants remain separate products.
+ "dragon-east":"dragon","dragon-west":"dragon"
+};
 const cart={};
 let lastOrder=null;
 const currency={robux:"Robux",libyana:"رصيد ليبيانا",madar:"رصيد المدار"};
@@ -164,7 +170,7 @@ function renderProducts(){
   const price=priceOf(p);
   const card=document.createElement("article");card.className="card";
   const img=document.createElement("img");img.className="fruitImg";img.alt=p.en+" fruit";
-  img.src=IMAGE_BASE+encodeURIComponent(p.image);
+  img.src=IMAGE_BASE+(IMAGE_SLUGS[p.id]||p.id)+".webp";
   img.onerror=()=>{img.removeAttribute("src");img.alt="الصورة غير متاحة حالياً";img.style.opacity=".35";};
   card.appendChild(img);
   card.insertAdjacentHTML("beforeend",`<div class="fruitName">${p.ar}</div><div class="en">${p.en}</div><div class="price">${price>0?money(price)+" "+currency[document.getElementById("payment").value]:"السعر غير محدد بعد"}</div>${unavailable?'<div class="out">نفدت الكمية</div>':''}`);
@@ -237,4 +243,4 @@ document.getElementById("payment").addEventListener("change",()=>{renderProducts
 renderProducts();renderReviews();updateCartCount();
 </script>
 </body>
-</html>
+ </html>
