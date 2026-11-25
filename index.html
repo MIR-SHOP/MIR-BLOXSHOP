@@ -1,63 +1,51 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MIR BLOX SHOP</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#0b0712;color:white;font-family:Arial;padding-bottom:30px}
-header{text-align:center;padding:25px;background:#190e27;border-bottom:2px solid #70449a}
-header h1{color:#d9a7ff;margin:0}
-main{max-width:850px;margin:auto;padding:15px}
-.panel{background:#160f20;border:1px solid #50316a;border-radius:15px;padding:15px;margin:15px 0}
-h2{color:#dfb5ff}
-button{background:#873ec0;color:white;border:0;padding:12px;border-radius:10px;cursor:pointer}
-input,textarea{width:100%;padding:12px;margin:7px 0;background:#21172e;color:white;border:1px solid #634181;border-radius:9px}
-.payment-options{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.pay-card{background:#241532;border:2px solid #593477;border-radius:14px;padding:14px 5px;text-align:center;cursor:pointer}
-.pay-card img{width:55px;height:55px;object-fit:contain;display:block;margin:auto auto 8px}
-.pay-card.selected{border-color:#d18aff;background:#512477;box-shadow:0 0 12px #a855f7}
-</style>
-</head>
-<body>
-<header>
-<h1>🍇 MIR BLOX SHOP</h1>
-<p>متجر فواكه Blox Fruits</p>
-</header>
-<main>
-<section class="panel">
-<h2>💳 طرق الدفع</h2>
-<div class="payment-options">
-<div class="pay-card" onclick="choosePay(this,'Robux')">
-<img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Robux_2019_Logo.svg">
-<b>Robux</b>
-</div>
-<div class="pay-card" onclick="choosePay(this,'ليبيانا')">
-<img src="https://www.libyana.ly/favicon.ico">
-<b>ليبيانا</b>
-</div>
-<div class="pay-card" onclick="choosePay(this,'المدار')">
-<img src="https://almadar.ly/favicon.ico">
-<b>المدار</b>
-</div>
-</div>
-<input type="hidden" id="paymentMethod">
-</section>
-</main>
-  
-<style>
-#products{
+body{
+ margin:0;
+ background:#0b0713;
+ color:white;
+ font-family:Arial,sans-serif;
+ padding-bottom:40px;
+}
+header{
+ background:linear-gradient(120deg,#241044,#10091d);
+ padding:25px 15px;
+ text-align:center;
+ border-bottom:2px solid #a855f7;
+}
+header h1{
+ margin:0;
+ color:#d8a5ff;
+ font-size:30px;
+}
+header p{color:#ddd}
+.container{
+ max-width:1100px;
+ margin:auto;
+ padding:15px;
+}
+.section-title{
+ color:#d8a5ff;
+ font-size:23px;
+ margin:25px 0 15px;
+}
+.products{
  display:grid;
  grid-template-columns:repeat(2,minmax(0,1fr));
  gap:12px;
 }
 .product{
- background:#21172e;
- border:1px solid #70449a;
+ background:#191126;
+ border:1px solid #392451;
  border-radius:14px;
- padding:10px;
+ padding:12px;
  text-align:center;
 }
 .product img{
@@ -65,454 +53,109 @@ input,textarea{width:100%;padding:12px;margin:7px 0;background:#21172e;color:whi
  height:125px;
  object-fit:contain;
 }
-.product h3{color:#e2baff;font-size:15px}
-.product p{color:white}
-.product button{
- width:100%;
- padding:10px;
+.product h3{margin:8px 0}
+.price{
+ color:#ffd166;
+ font-weight:bold;
+ margin:10px;
+}
+button{
  border:0;
  border-radius:9px;
- background:#873bd1;
- color:white;
-}
-#cartItems{margin:12px 0}
-</style>
-
-<h2>🍇 جميع فواكه Blox Fruits</h2>
-<p>اختار فاكهتك | Choose your fruit</p>
-<div id="products"></div>
-
-<div class="panel" id="cartPanel">
-  <h2>🛒 سلة المشتريات | Cart</h2>
-
-  <div id="cartItems">السلة فارغة</div>
-
-  <h3>المجموع: <span id="total">0</span></h3>
-
-  <button class="order-button"
-    onclick="document.querySelector('.checkout').scrollIntoView({behavior:'smooth'})">
-    إكمال الطلب | Continue
-  </button>
-</div>
-
-<script>
-const fruitNames=[
-["Rocket","روكيت"],["Spin","سبين"],
-["Blade","بليد"],["Spring","سبرينغ"],
-["Bomb","بومب"],["Smoke","سموك"],
-["Spike","سبايك"],["Flame","فليم"],
-["Ice","آيس"],["Sand","ساند"],
-["Dark","دارك"],["Eagle","إيغل"],
-["Diamond","دايموند"],["Light","لايت"],
-["Rubber","ربر"],["Ghost","غوست"],
-["Magma","ماغما"],["Quake","كويك"],
-["Buddha","بوذا"],["Love","لاف"],
-["Creation","كرييشن"],["Spider","سبايدر"],
-["Sound","ساوند"],["Phoenix","فونيكس"],
-["Portal","بورتال"],["Lightning","لايتنينغ"],
-["Pain","بين"],["Blizzard","بليزارد"],
-["Gravity","جرافيتي"],["Mammoth","ماموث"],
-["T-Rex","تي ريكس"],["Dough","دو"],
-["Shadow","شادو"],["Venom","فينوم"],
-["Gas","غاز"],["Spirit","سبيريت"],
-["Tiger","تايغر"],["Yeti","ييتي"],
-["Magnet","ماغنيت"],["Kitsune","كيتسوني"],
-["Control","كنترول"],["Dragon","دراجون"]
-];
-
-const cart={};
-const prices=fruitNames.map(()=>0);
-const stocks=fruitNames.map(()=>10);
-
-const imageFiles={
-"Blade":"Chop",
-"Eagle":"Falcon",
-"Lightning":"Rumble",
-"Tiger":"Leopard",
-"Creation":"Creation"
-};
-
-function fruitImage(name){
- let file=imageFiles[name]||name;
- return "https://blox-fruits.com/wp-content/uploads/2023/10/"+file+"-Fruit-Blox-Fruits.webp";
-}
-
-function showFruits(){
- document.getElementById("products").innerHTML=
- fruitNames.map((f,i)=>`
- <div class="product">
-  <img src="${fruitImage(f[0])}"
-   alt="${f[0]}"
-   loading="lazy"
-   onerror="this.onerror=null;this.src='https://placehold.co/200x150/21172e/ffffff?text=${f[0]}'">
-  <h3>${f[1]} | ${f[0]}</h3>
-  <p>السعر: ${prices[i]||"يحدد لاحقاً"}</p>
-  <p>${stocks[i]>0?"متوفر":"نفدت الكمية"}</p>
-  <button ${stocks[i]===0?"disabled":""}
-   onclick="addFruit(${i})">
-   أضف للسلة
-  </button>
- </div>
- `).join("");
-}
-
-function addFruit(i){
- if((cart[i]||0)>=stocks[i]){
-  alert("الكمية غير متوفرة");
-  return;
- }
- cart[i]=(cart[i]||0)+1;
- function showCart(){
-  let total = 0;
-  let html = "";
-
-  Object.keys(cart).forEach(i => {
-    let f = fruitNames[i];
-    let quantity = cart[i];
-    let price = prices[i];
-    let sum = price * quantity;
-
-    total += sum;
-
-    html += `
-      <div style="padding:12px;border-bottom:1px solid #70449a">
-        <b>${f[1]} | ${f[0]}</b>
-        <p>السعر: ${price}</p>
-        <p>الكمية: ${quantity}</p>
-        <p>المجموع: ${sum}</p>
-        <button onclick="deleteFruit(${i})">حذف</button>
-      </div>
-    `;
-  });
-
-  document.getElementById("cartItems").innerHTML =
-    html || "السلة فارغة | Cart is empty";
-
-  document.getElementById("total").textContent = total;
-                 }
- });
- document.getElementById("cartItems").innerHTML=
- html||"السلة فارغة | Cart is empty";
- document.getElementById("total").textContent=total;
-}
-
-showFruits();
-showCart();
-</script>
-  
-<style>
-.checkout{
- background:#21172e;
- border:1px solid #70449a;
- border-radius:15px;
- padding:16px;
- margin-top:20px;
-}
-.checkout input{
- width:100%;
- padding:13px;
- margin:7px 0;
- border:1px solid #70449a;
- border-radius:9px;
- background:#120c1c;
- color:white;
-}
-.payment-methods{
- display:grid;
- grid-template-columns:repeat(3,minmax(0,1fr));
- gap:9px;
- margin:15px 0;
-}
-.pay-card{
- background:#160f20;
- border:2px solid #70449a;
- border-radius:12px;
- padding:10px 4px;
- text-align:center;
- cursor:pointer;
-}
-.pay-card:has(input:checked){
- border-color:#d69aff;
- background:#38204e;
-}
-.pay-card img{
- width:100%;
- height:60px;
- object-fit:contain;
-}
-.pay-card input{width:auto}
-.pay-card span{color:white;font-size:13px}
-.order-button{
- width:100%;
- padding:14px;
- border:0;
- border-radius:10px;
- background:#873bd1;
+ padding:11px 15px;
+ background:#8b3dce;
  color:white;
  font-weight:bold;
- font-size:16px;
-}
-</style>
-
-<div class="checkout">
- <h2>📦 إتمام الطلب | Checkout</h2>
-
- <input id="orderRoblox" placeholder="اسم Roblox">
- <input id="orderTikTok" placeholder="اسم TikTok">
-
- <h3>💳 اختر طريقة الدفع</h3>
-
- <div class="payment-methods">
-
-  <label class="pay-card">
-   <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Robux_2019_Logo_black.svg" alt="Robux">
-   <input type="radio" name="payment" value="Robux">
-   <br><span>Robux</span>
-  </label>
-
-  <label class="pay-card">
-   <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Libyana_mobile_phone_logo.png" alt="Libyana">
-   <input type="radio" name="payment" value="ليبيانا">
-   <br><span>ليبيانا</span>
-  </label>
-
-  <label class="pay-card">
-   <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Almadar_Aljadid_Logo.png" alt="Almadar">
-   <input type="radio" name="payment" value="المدار">
-   <br><span>المدار</span>
-  </label>
-
- </div>
-
- <button class="order-button" onclick="submitShopOrder()">
- تأكيد الطلب | Confirm Order
- </button>
-</div>
-
-<script>
-async function submitShopOrder(){
- const roblox=document.getElementById("orderRoblox").value.trim();
- const tiktok=document.getElementById("orderTikTok").value.trim();
- const payment=document.querySelector('input[name="payment"]:checked');
-
- if(!roblox||!tiktok||!payment){
-  alert("يرجى إدخال البيانات واختيار طريقة الدفع");
-  return;
- }
-
- const ids=Object.keys(cart);
-
- if(ids.length===0){
-  alert("السلة فارغة");
-  return;
- }
-
- let details="";
- ids.forEach(i=>{
-  details+=fruitNames[i][1]+" | "+fruitNames[i][0]+" × "+cart[i]+"\n";
- });
-
- const message=
- "طلب جديد MIR BLOX SHOP\n"+
- "Roblox: "+roblox+"\n"+
- "TikTok: "+tiktok+"\n"+
- "طريقة الدفع: "+payment.value+"\n"+
- "الفواكه:\n"+details;
-
- try{
-  await navigator.clipboard.writeText(message);
-  alert("تم نسخ تفاصيل الطلب بنجاح. أرسلها لإدارة المتجر للتأكيد.");
- }catch(e){
-  alert("تعذر نسخ تفاصيل الطلب");
- }
-}
-</script>
-  
-<style>
-.review-box{
- background:#21172e;
- border:1px solid #70449a;
- border-radius:15px;
- padding:16px;
- margin-top:20px;
-}
-.review-box textarea{
- width:100%;
- min-height:90px;
- padding:12px;
- border-radius:10px;
- background:#120c1c;
- color:white;
- border:1px solid #70449a;
-}
-.stars{
- display:flex;
- gap:8px;
- margin:15px 0;
-}
-.stars button{
- background:none;
- border:0;
- font-size:30px;
- color:#777;
  cursor:pointer;
 }
-.stars button.active{color:gold}
-.review-submit,.skip-review{
+button:active{transform:scale(.97)}
+.cart-box,.panel{
+ background:#191126;
+ border:1px solid #392451;
+ border-radius:14px;
+ padding:16px;
+ margin-top:18px;
+}
+input,select,textarea{
  width:100%;
- padding:12px;
- border:0;
- border-radius:10px;
+ padding:13px;
+ margin:8px 0;
+ background:#0e0917;
+ border:1px solid #543773;
+ border-radius:9px;
  color:white;
- margin-top:9px;
+ font-size:15px;
 }
-.review-submit{background:#873bd1}
-.skip-review{background:#51445f}
-.review-item{
- background:#160f20;
- padding:12px;
- border-radius:10px;
- margin-top:10px;
+.full{width:100%;margin-top:10px}
+.total{
+ color:#ffd166;
+ font-size:20px;
+ font-weight:bold;
 }
-.gold{color:gold}
-</style>
-
-<div class="review-box" id="reviewPanel">
- <h2>⭐ قيّم تجربتك | Rate us</h2>
- <p>رأيك يهمنا ❤️</p>
-
- <div class="stars" id="reviewStars">
-  <button onclick="chooseStar(1)">★</button>
-  <button onclick="chooseStar(2)">★</button>
-  <button onclick="chooseStar(3)">★</button>
-  <button onclick="chooseStar(4)">★</button>
-  <button onclick="chooseStar(5)">★</button>
- </div>
-
- <textarea id="reviewText"
- placeholder="اكتب رأيك في المتجر... | Write your review"></textarea>
-
- <button class="review-submit" onclick="addReview()">
- إرسال التقييم | Submit
- </button>
-
- <button class="skip-review" onclick="skipReview()">
- تخطي | Skip
- </button>
-</div>
-
-<div class="review-box">
- <h2>⭐ آراء الزبائن | Reviews</h2>
- <div id="reviewsList"></div>
-</div>
-
-<script>
-let selectedStars=5;
-
-function chooseStar(n){
- selectedStars=n;
- document.querySelectorAll("#reviewStars button")
- .forEach((b,i)=>{
-  b.classList.toggle("active",i<n);
- });
+.reviews{
+ background:#191126;
+ border-radius:12px;
+ padding:13px;
+ margin:10px 0;
+ border:1px solid #392451;
 }
-
-function addReview(){
- const comment=document.getElementById("reviewText").value.trim();
-
- if(!comment){
-  alert("اكتب رأيك أولاً");
-  return;
- }
-
- const badWords=[
- "كس","شرموط","قحبة","زب","خول",
- "fuck","shit","bitch"
- ];
-
- if(badWords.some(w=>comment.toLowerCase().includes(w))){
-  alert("يرجى استخدام كلمات محترمة");
-  return;
- }
-
- const reviews=JSON.parse(
- localStorage.getItem("mirReviews")||"[]"
- );
-
- reviews.unshift({
- comment:comment,
- stars:selectedStars
- });
-
- localStorage.setItem("mirReviews",JSON.stringify(reviews));
-
- document.getElementById("reviewText").value="";
- document.getElementById("reviewPanel").style.display="none";
-
- showReviews();
- alert("شكراً على تقييمك ⭐");
-}
-
-function skipReview(){
- document.getElementById("reviewPanel").style.display="none";
-}
-
-function escapeReview(s){
- return String(s).replace(/[&<>"']/g,c=>({
- "&":"&amp;","<":"&lt;",">":"&gt;",
- '"':"&quot;","'":"&#39;"
- }[c]));
-}
-
-function showReviews(){
- const reviews=JSON.parse(
- localStorage.getItem("mirReviews")||"[]"
- );
-
- document.getElementById("reviewsList").innerHTML=
- reviews.map(r=>`
- <div class="review-item">
-  <div class="gold">${"★".repeat(r.stars)}${"☆".repeat(5-r.stars)}</div>
-  <p>${escapeReview(r.comment)}</p>
- </div>
- `).join("")||"لا توجد تقييمات حتى الآن";
-}
-
-chooseStar(5);
-showReviews();
-</script>
-  <style>
-.contact-box{
-  background:#21172e;
-  border:1px solid #70449a;
-  border-radius:15px;
-  padding:18px;
-  margin:20px 0;
-  text-align:center;
-  color:white;
-}
-.contact-box a{
-  display:block;
-  background:#000;
-  color:white;
-  padding:13px;
-  border-radius:10px;
-  text-decoration:none;
-  margin-top:12px;
-  font-weight:bold;
+@media(min-width:650px){
+ .products{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
 </style>
+</head>
 
-<div class="contact-box">
-  <h3>📩 واجهتك مشكلة؟</h3>
-  <p>تواصل معنا على حسابنا وسنساعدك ❤️</p>
+<body>
 
-  <a href="https://www.tiktok.com/@justrynianbrian1"
-     target="_blank"
-     rel="noopener">
-    تواصل معنا على TikTok
-  </a>
-  <p>@justrynianbrian1</p>
+<header>
+<h1>🍎 MIR BLOX SHOP</h1>
+<p>متجرك الأول لفواكه Blox Fruits</p>
+<p>Welcome To MIR BLOX SHOP</p>
+</header>
+
+<div class="container">
+
+<h2 class="section-title">🍇 الفواكه المتوفرة</h2>
+<div class="products" id="products"></div>
+
+<div class="cart-box">
+<h2>🛒 سلة المشتريات</h2>
+<div id="cartItems">السلة فارغة</div>
+<p class="total" id="total">الإجمالي: 0</p>
+</div>
+
+<div class="panel">
+<h2>📦 إتمام الطلب</h2>
+
+<input id="robloxName" placeholder="اسمك في Roblox">
+<input id="tiktokName" placeholder="اسمك في TikTok">
+
+<h3>💳 اختر طريقة الدفع</h3>
+<select id="payment" onchange="updatePrices()">
+<option value="robux">Robux</option>
+<option value="lyd">دينار ليبي</option>
+</select>
+
+<button class="full" onclick="placeOrder()">تأكيد الطلب</button>
+</div>
+
+<div class="panel" id="reviewPanel" style="display:none">
+<h2>⭐ قيّم تجربتك</h2>
+<select id="rating">
+<option value="5">⭐⭐⭐⭐⭐ ممتاز</option>
+<option value="4">⭐⭐⭐⭐ جيد جداً</option>
+<option value="3">⭐⭐⭐ جيد</option>
+<option value="2">⭐⭐ سيئ</option>
+<option value="1">⭐ سيئ جداً</option>
+</select>
+<textarea id="reviewText" placeholder="اكتب رأيك في المتجر"></textarea>
+<button class="full" onclick="sendReview()">إرسال التقييم</button>
+<button class="full" onclick="skipReview()">تخطي</button>
+</div>
+
+<h2 class="section-title">💬 آراء الزبائن</h2>
+<div id="reviewsList"></div>
+
 </div>
 </body>
 </html>
