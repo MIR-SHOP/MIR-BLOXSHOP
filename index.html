@@ -150,6 +150,7 @@ a{color:#d9baff}
 <p><a href="https://www.tiktok.com/@justrynianbrian1" target="_blank" rel="noopener">@justrynianbrian1</a></p>
 <small>MIR BLOX SHOP © جميع الحقوق محفوظة</small>
 </footer>
+
 <script>
 /* تحكم صاحب المتجر: عدّل الأسعار والمخزون هنا */
 const fruits = [
@@ -196,7 +197,11 @@ const fruits = [
 {id:"control",ar:"كونترول",en:"Control",stock:0,prices:{robux:2000,libyana:230,madar:230}},
 {id:"dragon-east",ar:"التنين الشرقي",en:"Eastern Dragon",stock:0,prices:{robux:2500,libyana:280,madar:280}},
 {id:"dragon-west",ar:"التنين الغربي",en:"Western Dragon",stock:0,prices:{robux:2500,libyana:280,madar:280}}
-]; 
+];
+
+/* الإصلاح: بقية المتجر تستعمل PRODUCTS */
+const PRODUCTS = fruits;
+
 const IMAGE_BASE="https://fruityblox.com/images/fruits/";
 const IMAGE_SLUGS={
 rocket:"rocket",spin:"spin",blade:"blade",spring:"spring",bomb:"bomb",
@@ -330,7 +335,6 @@ updateCartCount();
 renderCart();
 }
 
-/* إرسال الطلبات عبر EmailJS - نفس إعدادات أمس */
 async function placeOrder(){
 
 const roblox=document.getElementById("roblox").value.trim();
@@ -382,7 +386,6 @@ btn.textContent="جاري الإرسال...";
 msg.textContent="جاري إرسال طلبك...";
 
 try{
-
 const response=await emailjs.send(
 "service_nfnzdsc",
 "template_cpsosvu",
@@ -408,12 +411,9 @@ document.getElementById("reviewOverlay").style.display="flex";
 alert("تم إرسال الطلب بنجاح!");
 
 }catch(error){
-
 console.error("EmailJS error:",error);
 msg.textContent="تعذر إرسال الطلب. حاول مرة أخرى أو تواصل معنا عبر TikTok.";
-
 alert("لم يتم إرسال الطلب. حاول مرة أخرى.");
-
 }finally{
 btn.disabled=false;
 btn.textContent="تأكيد الطلب";
